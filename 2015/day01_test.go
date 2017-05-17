@@ -1,6 +1,16 @@
 package main
 
 import "testing"
+import "io/ioutil"
+
+func assertEq(t *testing.T, have, want interface{}) {
+    if have != want {
+        t.Errorf(
+            "\nhave: %v\nwant: %v",
+            have, want,
+        )
+    }
+}
 
 func TestFindFloor(t *testing.T) {
     tests := []struct { arg string; want int } {
@@ -17,11 +27,16 @@ func TestFindFloor(t *testing.T) {
     
     for _, test := range tests {
         have := FindFloor(test.arg)
-        if have != test.want {
-            t.Errorf(
-                "FindFloor(%q) == %v, want %v",
-                test.arg, have, test.want,
-            )
-        }
+        assertEq( t, have, test.want )
     }
+}
+
+func TestAnswer(t *testing.T) {
+    input, err := ioutil.ReadFile("inputs/day01.txt");
+    if err != nil {
+        panic(err)
+    }
+    
+    have := FindFloor( string(input) )
+    assertEq( t, have, 138 )
 }
