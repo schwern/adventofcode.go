@@ -1,7 +1,10 @@
-package day01
+package day01_test
 
-import "testing"
-import "io/ioutil"
+import(
+     "testing"
+     "io/ioutil"
+     "github.com/schwern/adventofcode2015"
+)
 
 var input_file = "inputs/day01.txt"
 
@@ -45,7 +48,7 @@ func TestFindFloor(t *testing.T) {
     tests = append( tests, testCase{ input, 138 } )
     
     for _, test := range tests {
-        have := FindFloor(test.arg)
+        have := day01.FindFloor(test.arg)
         assertEq( t, have, test.want )
     }
 }
@@ -61,7 +64,7 @@ func TestFirstBasement(t *testing.T) {
     tests = append( tests, testCase{ input, 1771 } )
     
     for _, test := range tests {
-        have := FirstBasement(test.arg)
+        have := day01.FirstBasement(test.arg)
         assertEq( t, have, test.want )
     }
 }
