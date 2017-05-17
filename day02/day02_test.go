@@ -25,6 +25,18 @@ func TestWrappingPaperNeeded( t *testing.T ) {
     }
 }
 
+func TestRibbonNeeded( t *testing.T ) {
+    tests := []struct{ l, w, h int; want int } {
+        { 2, 3, 4, 34 },
+        { 1, 1, 10, 14 },
+    }
+    
+    for _, test := range tests {
+        have := day02.RibbonNeeded( test.l, test.w, test.h )
+        testutil.AssertEq( t, have, test.want )
+    }
+}
+
 func TestDay02Part01( t *testing.T ) {
     fh := util.OpenFile(Input_File)
     
@@ -43,4 +55,24 @@ func TestDay02Part01( t *testing.T ) {
     })
     
     testutil.AssertEq( t, paper, 1606483 )
+}
+
+func TestDay02Part02( t *testing.T ) {
+    fh := util.OpenFile(Input_File)
+    
+    ribbon := 0
+    readline.ReadLine(fh, func(line string) {
+        args := make( []int, 3 )
+        for i, arg := range strings.Split(line, "x") {
+            num, err := strconv.Atoi(arg)
+            if err != nil {
+                panic(fmt.Sprintf("Can't convert %s to integer", arg))
+            }
+            
+            args[i] = num
+        }
+        ribbon += day02.RibbonNeeded( args[0], args[1], args[2] )
+    })
+    
+    testutil.AssertEq( t, ribbon, 3842356 )
 }
