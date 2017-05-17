@@ -3,6 +3,13 @@ package main
 import "testing"
 import "io/ioutil"
 
+var input_file = "inputs/day01.txt"
+
+type testCase struct {
+    arg string
+    want int
+}
+
 func assertEq(t *testing.T, have, want interface{}) {
     if have != want {
         t.Errorf(
@@ -12,8 +19,17 @@ func assertEq(t *testing.T, have, want interface{}) {
     }
 }
 
+func readInput( file string ) string {
+    input, err := ioutil.ReadFile(file);
+    if err != nil {
+        panic(err)
+    }
+    
+    return string(input)
+}
+
 func TestFindFloor(t *testing.T) {
-    tests := []struct { arg string; want int } {
+    tests := []testCase {
         {"(())", 0},
         {"()()", 0},
         {"(((", 3},
@@ -25,18 +41,27 @@ func TestFindFloor(t *testing.T) {
         {")())())", -3},
     }
     
+    input := readInput(input_file)
+    tests = append( tests, testCase{ input, 138 } )
+    
     for _, test := range tests {
         have := FindFloor(test.arg)
         assertEq( t, have, test.want )
     }
 }
 
-func TestAnswer(t *testing.T) {
-    input, err := ioutil.ReadFile("inputs/day01.txt");
-    if err != nil {
-        panic(err)
+func TestFirstBasement(t *testing.T) {
+    tests := []testCase {
+        { ")", 1 },
+        { "()())", 5 },
+        { "((", 0 },
     }
     
-    have := FindFloor( string(input) )
-    assertEq( t, have, 138 )
+    input := readInput(input_file)
+    tests = append( tests, testCase{ input, 1771 } )
+    
+    for _, test := range tests {
+        have := FirstBasement(test.arg)
+        assertEq( t, have, test.want )
+    }
 }
