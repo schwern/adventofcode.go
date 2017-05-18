@@ -36,20 +36,34 @@ func TestRibbonNeeded( t *testing.T ) {
     }
 }
 
-func TestDay02Part01( t *testing.T ) {    
-    paper := 0
-    
-    lines := util.LineChannel(Input_File)
-    for line := range lines {
-        args := make( []int, 3 )
-        for i, arg := range strings.Split(line, "x") {
-            num, err := strconv.Atoi(arg)
-            if err != nil {
-                panic(fmt.Sprintf("Can't convert %s to integer", arg))
+func parseInputs( filename string ) chan []int {    
+    ch := make( chan []int )
+    go func() {
+        defer close(ch)
+        lines := util.LineChannel(filename)
+
+        for line := range lines {
+            args := make( []int, 3 )
+            for i, arg := range strings.Split(line, "x") {
+                num, err := strconv.Atoi(arg)
+                if err != nil {
+                    panic(fmt.Sprintf("Can't convert %s to integer", arg))
+                }
+                
+                args[i] = num
             }
             
-            args[i] = num
+            ch <- args
         }
+    }()
+    
+    return ch
+}
+
+func TestDay02Part01( t *testing.T ) {    
+    paper := 0
+
+    for args := range parseInputs(Input_File) {
         paper += day02.WrappingPaperNeeded( args[0], args[1], args[2] )
     }
     
@@ -59,17 +73,7 @@ func TestDay02Part01( t *testing.T ) {
 func TestDay02Part02( t *testing.T ) {
     ribbon := 0
 
-    lines := util.LineChannel(Input_File)
-    for line := range lines {
-        args := make( []int, 3 )
-        for i, arg := range strings.Split(line, "x") {
-            num, err := strconv.Atoi(arg)
-            if err != nil {
-                panic(fmt.Sprintf("Can't convert %s to integer", arg))
-            }
-            
-            args[i] = num
-        }
+    for args := range parseInputs(Input_File) {
         ribbon += day02.RibbonNeeded( args[0], args[1], args[2] )
     }
     
