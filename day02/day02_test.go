@@ -8,7 +8,6 @@ import(
     "github.com/schwern/adventofcode2015/testutil"
     "github.com/schwern/adventofcode2015/day02"
     "github.com/schwern/adventofcode2015/util"
-    "github.com/jprichardson/readline-go"
 )
 
 var Input_File = "../testdata/day02.txt"
@@ -37,11 +36,11 @@ func TestRibbonNeeded( t *testing.T ) {
     }
 }
 
-func TestDay02Part01( t *testing.T ) {
-    fh := util.OpenFile(Input_File)
-    
+func TestDay02Part01( t *testing.T ) {    
     paper := 0
-    readline.ReadLine(fh, func(line string) {
+    
+    lines := util.LineChannel(Input_File)
+    for line := range lines {
         args := make( []int, 3 )
         for i, arg := range strings.Split(line, "x") {
             num, err := strconv.Atoi(arg)
@@ -52,16 +51,16 @@ func TestDay02Part01( t *testing.T ) {
             args[i] = num
         }
         paper += day02.WrappingPaperNeeded( args[0], args[1], args[2] )
-    })
+    }
     
     testutil.AssertEq( t, paper, 1606483 )
 }
 
 func TestDay02Part02( t *testing.T ) {
-    fh := util.OpenFile(Input_File)
-    
     ribbon := 0
-    readline.ReadLine(fh, func(line string) {
+
+    lines := util.LineChannel(Input_File)
+    for line := range lines {
         args := make( []int, 3 )
         for i, arg := range strings.Split(line, "x") {
             num, err := strconv.Atoi(arg)
@@ -72,7 +71,7 @@ func TestDay02Part02( t *testing.T ) {
             args[i] = num
         }
         ribbon += day02.RibbonNeeded( args[0], args[1], args[2] )
-    })
+    }
     
     testutil.AssertEq( t, ribbon, 3842356 )
 }
