@@ -22,3 +22,17 @@ func TestPresentsDelivered( t *testing.T ) {
         testutil.AssertEq( t, have, test.Want )
     }
 }
+
+func TestRoboPresentsDelivered( t *testing.T ) {
+    tests := []testutil.TestCase{
+        { "^v", 3 },
+        { "^>v<", 3 },
+        { "^v^v^v^v^v", 11 },
+        { util.ReadFile(Input_File), 2360 },
+    }
+
+    for _, test := range tests {
+        have := day03.RoboPresentsDelivered( test.Arg )
+        testutil.AssertEq( t, have, test.Want )
+    }
+}
