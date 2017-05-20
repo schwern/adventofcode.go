@@ -7,13 +7,13 @@ import(
     "strings"
 )
 
-func MineAdventCoin( secret string ) int {
+func MineAdventCoin( secret, prefix string ) int {
     for i := 0; i < 1e8; i++ {
         key := []byte( fmt.Sprintf("%v%d", secret, i) )
         
         sum := md5.Sum(key)
 
-        if strings.HasPrefix(hex.EncodeToString(sum[:]), "00000") {
+        if strings.HasPrefix(hex.EncodeToString(sum[:]), prefix) {
             return i
         }
     }
