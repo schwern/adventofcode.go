@@ -17,9 +17,12 @@ func hasPair( str string ) bool {
     return false
 }
 
+// Contains at least 3 vowels
+var three_vowels_re = *regexp.MustCompile(`[aeiou]`)
+// It does not contain the strings ab, cd, pq, or xy
+var pairs_re = *regexp.MustCompile(`(?:ab|cd|pq|xy)`)
+
 func IsNice( info string ) bool {    
-    // Contains at least 3 vowels
-    three_vowels_re := *regexp.MustCompile(`[aeiou]`)
     vowels := three_vowels_re.FindAllString( info, 3 )
     if len(vowels) < 3 {
         return false
@@ -30,8 +33,6 @@ func IsNice( info string ) bool {
         return false
     }
     
-    // It does not contain the strings ab, cd, pq, or xy
-    pairs_re := *regexp.MustCompile(`(?:ab|cd|pq|xy)`)
     if pairs_re.MatchString( info ) {
         return false
     }
@@ -39,13 +40,13 @@ func IsNice( info string ) bool {
     return true
 }
 
-func IsNice2( info string ) bool {
-    rules := []pcre.Regexp{ 
-        pcre.MustCompile(`(..).*\1`, 0),
-        pcre.MustCompile(`(.).\1`, 0),
-    }
+var IsNice2_rules = []pcre.Regexp{ 
+    pcre.MustCompile(`(..).*\1`, 0),
+    pcre.MustCompile(`(.).\1`, 0),
+}
 
-    for _, rule := range rules {
+func IsNice2( info string ) bool {
+    for _, rule := range IsNice2_rules {
         matcher := rule.MatcherString( info, 0 )
         if !matcher.Matches() {
             return false
