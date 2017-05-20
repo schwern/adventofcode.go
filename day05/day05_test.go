@@ -2,12 +2,27 @@ package day05_test
 
 import(
     "testing"
-    //"github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode2015/util"
     "github.com/schwern/adventofcode2015/testutil"
     "github.com/schwern/adventofcode2015/day05"
 )
 
 var Input_File = "../testdata/day05.txt"
+
+type checkFunc func( string ) bool
+
+func checkList( checker checkFunc ) int {
+    lines := util.LineChannel(Input_File)
+    
+    num_nice := 0
+    for line := range lines {
+        if checker(line) {
+            num_nice++
+        }
+    }
+    
+    return num_nice
+}
 
 func TestIsNice( t *testing.T ) {
     tests := []struct{ Arg string; Want bool }{
@@ -22,6 +37,8 @@ func TestIsNice( t *testing.T ) {
         have := day05.IsNice(test.Arg)
         testutil.AssertEq( t, have, test.Want )
     }
+    
+    testutil.AssertEq( t, checkList( day05.IsNice ), 236 )
 }
 
 func TestIsNice2( t *testing.T ) {
@@ -36,4 +53,6 @@ func TestIsNice2( t *testing.T ) {
         have := day05.IsNice2(test.Arg)
         testutil.AssertEq( t, have, test.Want )
     }
+    
+    testutil.AssertEq( t, checkList( day05.IsNice2 ), 51 )
 }
