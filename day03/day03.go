@@ -23,51 +23,22 @@ func move( pos *[2]int, direction rune ) {
     pos[1] += dy
 }
 
-func RoboPresentsDelivered( directions string ) int {
+func DeliverPresents( directions string, num_movers int ) int {
     count := 0
     grid := make( map[[2]int]int )
-    x := 0
-    y := 0
+    movers := make( [][2]int, num_movers )
     
-    santa := [2]int{x,y}
-    robot := [2]int{x,y}
-    grid[santa]++
+    grid[movers[0]]++
     count++
 
-    pos := &santa
+    var pos *[2]int
     for i, dir := range directions {
-        _ = "breakpoint"
-        switch i % 2 {
-            case 0: pos = &santa
-            case 1: pos = &robot
-            default: panic("What?")
-        }
+        pos = &movers[i % num_movers]
         move( pos, dir )
         if grid[*pos] == 0 {
             count++
         }
         grid[*pos]++
-    }
-    
-    return count
-}
-
-func PresentsDelivered( directions string ) int {
-    count := 0
-    grid := make( map[[2]int]int )
-    x := 0
-    y := 0
-    
-    pos := [2]int{x,y}
-    grid[pos]++
-    count++
-    
-    for _, dir := range directions {        
-        move( &pos, dir )        
-        if grid[pos] == 0 {
-            count++
-        }
-        grid[pos]++
     }
     
     return count

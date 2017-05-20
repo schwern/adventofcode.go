@@ -18,7 +18,7 @@ func TestPresentsDelivered( t *testing.T ) {
     }
 
     for _, test := range tests {
-        have := day03.PresentsDelivered( test.Arg )
+        have := day03.DeliverPresents( test.Arg, 1 )
         testutil.AssertEq( t, have, test.Want )
     }
 }
@@ -32,7 +32,7 @@ func TestRoboPresentsDelivered( t *testing.T ) {
     }
 
     for _, test := range tests {
-        have := day03.RoboPresentsDelivered( test.Arg )
+        have := day03.DeliverPresents( test.Arg, 2 )
         testutil.AssertEq( t, have, test.Want )
     }
 }
