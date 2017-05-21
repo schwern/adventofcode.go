@@ -16,12 +16,12 @@ const(
     TOGGLE = iota
 )
 
-func MakeLights() [][]bool {
+func MakeLights() [][]int {
     // Top level slice
-    lights := make([][]bool, LightsY)
+    lights := make([][]int, LightsY)
     
     // Slice for all pixels
-    pixels := make([]bool, LightsX*LightsY)
+    pixels := make([]int, LightsX*LightsY)
     
     for i := range lights {
         lights[i], pixels = pixels[:LightsX], pixels[LightsX:]
@@ -74,21 +74,40 @@ func parseInstruction( instruction string ) (int, [2]int, [2]int) {
     return cmd, start, end
 }
 
-func SwitchLights( lights [][]bool, instruction string ) {
+func LightBright( lights [][]int, instruction string ) {
     cmd, start, end := parseInstruction( instruction )
     
     for x := start[0]; x <= end[0]; x++ {
         for y := start[1]; y <= end[1]; y++ {
             switch cmd {
                 case ON:
-                    lights[x][y] = true
+                    lights[x][y]++
                 case OFF:
-                    lights[x][y] = false
+                    if lights[x][y] > 0 {
+                        lights[x][y]--
+                    }
                 case TOGGLE:
-                    if lights[x][y] {
-                        lights[x][y] = false
+                    lights[x][y] += 2
+            }
+        }
+    }
+}
+
+func SwitchLights( lights [][]int, instruction string ) {
+    cmd, start, end := parseInstruction( instruction )
+    
+    for x := start[0]; x <= end[0]; x++ {
+        for y := start[1]; y <= end[1]; y++ {
+            switch cmd {
+                case ON:
+                    lights[x][y] = 1
+                case OFF:
+                    lights[x][y] = 0
+                case TOGGLE:
+                    if lights[x][y] != 0 {
+                        lights[x][y] = 0
                     } else {
-                        lights[x][y] = true
+                        lights[x][y] = 1
                     }
             }
         }

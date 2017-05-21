@@ -9,7 +9,7 @@ import(
 
 var Input_File = "../testdata/day06.txt"
 
-func assertLightsEq( t *testing.T, have [][]bool, want [][]bool ) {
+func assertLightsEq( t *testing.T, have [][]int, want [][]int ) {
     if len(have) != len(want) {
         t.Errorf( "\nlen(have): %v\nlen(want): %v", have, want )
         return
@@ -40,8 +40,8 @@ func TestMakeLights( t *testing.T ) {
     lights := day06.MakeLights()
     testutil.AssertEq( t, len(lights), 1000 )
     testutil.AssertEq( t, len(lights[0]), 1000 )
-    testutil.AssertEq( t, lights[0][0], false )
-    testutil.AssertEq( t, lights[999][999], false )
+    testutil.AssertEq( t, lights[0][0], 0 )
+    testutil.AssertEq( t, lights[999][999], 0 )
 }
 
 func TestSwitchAllLightsOn( t *testing.T ) {
@@ -51,7 +51,7 @@ func TestSwitchAllLightsOn( t *testing.T ) {
     want := day06.MakeLights()
     for i := range want {
         for j := range want[i] {
-            want[i][j] = true
+            want[i][j] = 1
         }
     }
 
@@ -64,10 +64,34 @@ func TestToggleLine( t *testing.T ) {
     
     want := day06.MakeLights()
     for i := 0; i < 1000; i++ {
-        want[i][0] = true
+        want[i][0] = 1
     }
     
     assertLightsEq( t, have, want )
+}
+
+func totalOn( lights [][]int ) int {
+    count := 0
+    for i := range lights {
+        for j := range lights[i] {
+            if lights[i][j] != 0 {
+                count++
+            }
+        }
+    }
+    
+    return count
+}
+
+func totalBrightness( lights [][]int ) int {
+    brightness := 0
+    for i := range lights {
+        for j := range lights[i] {
+            brightness += lights[i][j]
+        }
+    }
+    
+    return brightness
 }
 
 func TestPartOne( t *testing.T ) {
@@ -78,14 +102,25 @@ func TestPartOne( t *testing.T ) {
         day06.SwitchLights( lights, line )
     }
     
-    count := 0
-    for i := range lights {
-        for j := range lights[i] {
-            if lights[i][j] {
-                count++
-            }
-        }
+    testutil.AssertEq( t, totalOn(lights), 400410 )
+}
+
+func TestLightBright( t *testing.T ) {
+    have := day06.MakeLights()
+    day06.LightBright( have, "turn on 0,0 through 0,0" )
+    
+    want := day06.MakeLights()
+    want[0][0] = 1
+    assertLightsEq( t, have, want )
+}
+
+func TestPartTwo( t *testing.T ) {
+    lights := day06.MakeLights()
+    
+    lines := util.LineChannel( Input_File )
+    for line := range lines {
+        day06.LightBright( lights, line )
     }
     
-    testutil.AssertEq( t, count, 400410 )
+    testutil.AssertEq( t, totalBrightness( lights ), 15343601 )
 }
