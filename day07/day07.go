@@ -8,15 +8,20 @@ import(
 
 type Oper interface {
     Output() uint16
+    ID() string
 }
 
 type BaseOp struct {
-    ID string
+    id string
+}
+
+func (self *BaseOp) ID() string {
+    return self.id
 }
 
 type ConstOp struct {
-    val uint16
     BaseOp
+    val uint16
 }
 
 func (self *ConstOp) Output() uint16 {
@@ -25,21 +30,21 @@ func (self *ConstOp) Output() uint16 {
 
 func NewConstOp( id string, val uint16 ) *ConstOp {
     self := new(ConstOp)
-    self.ID = id
+    self.id = id
     self.val = val
     
     return self
 }
 
 type UnaryOp struct {
-    ID string
+    BaseOp
     op string
     in Oper
 }
 
 func NewUnaryOp( id string, op string, in Oper ) *UnaryOp {
     self := new(UnaryOp)
-    self.ID = id
+    self.id = id
     self.op = op
     self.in = in
     
@@ -59,7 +64,7 @@ func (self *UnaryOp) Output() uint16 {
 }
 
 type BinaryOp struct {
-    ID string
+    BaseOp
     op string
     in1 Oper
     in2 Oper
@@ -67,7 +72,7 @@ type BinaryOp struct {
 
 func NewBinaryOp( id string, op string, in1 Oper, in2 Oper ) *BinaryOp {
     self := new(BinaryOp)
-    self.ID = id
+    self.id = id
     self.op = op
     self.in1 = in1
     self.in2 = in2
@@ -112,14 +117,15 @@ func ParseOp( line string, ops map[string]Oper ) Oper {
         default:
             val, err := parseUint16( opInfo["val"] )
             if err == nil {
-                op = NewConstOp( "", val )
+                op = NewConstOp( opInfo["id"], val )
             } else {
+                // Passthrough op
                 in := getOp( opInfo["id"], ops ) 
                 op = NewUnaryOp( opInfo["id"], "PASS", in )
             }
     }
     
-    ops[opInfo["id"]] = op
+    ops[op.ID()] = op
     
     return op
 }

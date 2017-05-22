@@ -9,7 +9,7 @@ import(
 func TestConstOp( t *testing.T ) {
     op := day07.NewConstOp( "d", 10 )
     
-    testutil.AssertEq( t, op.ID, "d" )
+    testutil.AssertEq( t, op.ID(), "d" )
     testutil.AssertEq( t, op.Output(), uint16(10) )
 }
 
@@ -18,7 +18,7 @@ func TestUnaryOp( t *testing.T ) {
     
     op := day07.NewUnaryOp( "b", "NOT", const_op )
     
-    testutil.AssertEq( t, op.ID, "b" )
+    testutil.AssertEq( t, op.ID(), "b" )
     testutil.AssertEq( t, op.Output(), uint16(65525) )
 }
 
@@ -36,7 +36,7 @@ func TestBinaryOp( t *testing.T ) {
     for _, test := range tests {
         id := "z"
         op := day07.NewBinaryOp( id, test.op, in1, in2 )
-        testutil.AssertEq( t, op.ID, id )
+        testutil.AssertEq( t, op.ID(), id )
         testutil.AssertEq( t, op.Output(), test.want )
     }
 }
@@ -46,5 +46,5 @@ func TestParseOp( t *testing.T ) {
     op := day07.ParseOp( "123 -> x", ops )
     
     testutil.AssertEq( t, op.Output(), uint16(123) )
-    testutil.AssertEq( t, op, ops["x"] )
+    testutil.AssertEq( t, ops["x"], op )
 }
