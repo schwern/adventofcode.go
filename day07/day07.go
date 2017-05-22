@@ -29,11 +29,10 @@ func (self *ConstOp) Output() uint16 {
 }
 
 func NewConstOp( id string, val uint16 ) *ConstOp {
-    self := new(ConstOp)
+    self := ConstOp{ val: val }
     self.id = id
-    self.val = val
     
-    return self
+    return &self
 }
 
 type UnaryOp struct {
@@ -43,12 +42,10 @@ type UnaryOp struct {
 }
 
 func NewUnaryOp( id string, op string, in Oper ) *UnaryOp {
-    self := new(UnaryOp)
+    self := UnaryOp{ op: op, in: in }
     self.id = id
-    self.op = op
-    self.in = in
-    
-    return self
+
+    return &self
 }
 
 func (self *UnaryOp) Output() uint16 {
@@ -70,14 +67,11 @@ type BinaryOp struct {
     in2 Oper
 }
 
-func NewBinaryOp( id string, op string, in1 Oper, in2 Oper ) *BinaryOp {
-    self := new(BinaryOp)
-    self.id = id
-    self.op = op
-    self.in1 = in1
-    self.in2 = in2
+func NewBinaryOp( ident string, op string, in1 Oper, in2 Oper ) *BinaryOp {
+    self := BinaryOp{ op: op, in1: in1, in2: in2 }
+    self.id = ident
     
-    return self
+    return &self
 }
 
 func (self *BinaryOp) Output() uint16 {
