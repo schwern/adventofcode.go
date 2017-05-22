@@ -16,7 +16,7 @@ func TestConstOp( t *testing.T ) {
 func TestUnaryOp( t *testing.T ) {
     const_op := day07.NewConstOp( "a", 10 )
     
-    op := day07.NewUnaryOp( "b", day07.NOT, const_op )
+    op := day07.NewUnaryOp( "b", "NOT", const_op )
     
     testutil.AssertEq( t, op.ID, "b" )
     testutil.AssertEq( t, op.Output(), uint16(65525) )
@@ -26,11 +26,11 @@ func TestBinaryOp( t *testing.T ) {
     in1 := day07.NewConstOp( "x", 30 )
     in2 := day07.NewConstOp( "y", 3 )
         
-    tests := []struct{ op day07.OpType; want uint16 }{
-        { day07.AND, 2 },
-        { day07.OR, 31 },
-        { day07.LSHIFT, 240 },
-        { day07.RSHIFT, 3 },
+    tests := []struct{ op string; want uint16 }{
+        { "AND", 2 },
+        { "OR", 31 },
+        { "LSHIFT", 240 },
+        { "RSHIFT", 3 },
     }
     
     for _, test := range tests {
@@ -39,4 +39,12 @@ func TestBinaryOp( t *testing.T ) {
         testutil.AssertEq( t, op.ID, id )
         testutil.AssertEq( t, op.Output(), test.want )
     }
+}
+
+func TestParseOp( t *testing.T ) {
+    ops := make( map[string]day07.Oper )        
+    op := day07.ParseOp( "123 -> x", ops )
+    
+    testutil.AssertEq( t, op.Output(), uint16(123) )
+    testutil.AssertEq( t, op, ops["x"] )
 }
