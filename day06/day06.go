@@ -29,21 +29,6 @@ func MakeLights() [][]int {
     return lights
 }
 
-func findAllNamed( re *regexp.Regexp, str string ) map[string]string {
-    match := re.FindStringSubmatch( str )
-    if match == nil {
-        util.Panicf("Unknown instruction '%v'", str)
-    }
-    
-    params := make(map[string]string)
-    names := re.SubexpNames()
-    for i := 1; i < len(names); i++ {
-        params[names[i]] = match[i]
-    }
-    
-    return params
-}
-
 var instruction_re = regexp.MustCompile(
     `(?P<cmd>turn on|turn off|toggle) (?P<x1>\d+),(?P<y1>\d+) through (?P<x2>\d+),(?P<y2>\d+)`,
 )
@@ -56,7 +41,7 @@ func mustAtoi( str string ) int {
 }
 
 func parseInstruction( instruction string ) (int, [2]int, [2]int) {
-    parsed := findAllNamed(instruction_re, instruction)
+    parsed := util.FindAllNamed(instruction_re, instruction)
     
     cmd := OFF
     switch parsed["cmd"] {

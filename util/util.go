@@ -1,11 +1,27 @@
 package util
 
 import(
+    "regexp"
     "bufio"
     "os"
     "io/ioutil"
     "fmt"
 )
+
+func FindAllNamed( re *regexp.Regexp, str string ) map[string]string {
+    match := re.FindStringSubmatch( str )
+    if match == nil {
+        panic("Match failed")
+    }
+    
+    params := make(map[string]string)
+    names := re.SubexpNames()
+    for i := 1; i < len(names); i++ {
+        params[names[i]] = match[i]
+    }
+    
+    return params
+}
 
 func Check( err error ) {
     if err != nil {
