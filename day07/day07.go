@@ -6,49 +6,49 @@ import(
     "github.com/schwern/adventofcode2015/util"
 )
 
-type Oper interface {
+type Gate interface {
     Output() uint16
     ID() string
 }
 
-type BaseOp struct {
+type BaseGate struct {
     id string
 }
 
-func (self *BaseOp) ID() string {
+func (self *BaseGate) ID() string {
     return self.id
 }
 
-type ConstOp struct {
-    BaseOp
+type ConstGate struct {
+    BaseGate
     val uint16
 }
 
-func (self *ConstOp) Output() uint16 {
+func (self *ConstGate) Output() uint16 {
     return self.val
 }
 
-func NewConstOp( id string, val uint16 ) *ConstOp {
-    self := ConstOp{ val: val }
+func NewConstGate( id string, val uint16 ) *ConstGate {
+    self := ConstGate{ val: val }
     self.id = id
     
     return &self
 }
 
-type UnaryOp struct {
-    BaseOp
+type UnaryGate struct {
+    BaseGate
     op string
-    in Oper
+    in Gate
 }
 
-func NewUnaryOp( id string, op string, in Oper ) *UnaryOp {
-    self := UnaryOp{ op: op, in: in }
+func NewUnaryGate( id string, op string, in Gate ) *UnaryGate {
+    self := UnaryGate{ op: op, in: in }
     self.id = id
 
     return &self
 }
 
-func (self *UnaryOp) Output() uint16 {
+func (self *UnaryGate) Output() uint16 {
     switch self.op {
         case "NOT":
             return ^self.in.Output()
@@ -60,21 +60,21 @@ func (self *UnaryOp) Output() uint16 {
     }
 }
 
-type BinaryOp struct {
-    BaseOp
+type BinaryGate struct {
+    BaseGate
     op string
-    in1 Oper
-    in2 Oper
+    in1 Gate
+    in2 Gate
 }
 
-func NewBinaryOp( ident string, op string, in1 Oper, in2 Oper ) *BinaryOp {
-    self := BinaryOp{ op: op, in1: in1, in2: in2 }
+func NewBinaryGate( ident string, op string, in1 Gate, in2 Gate ) *BinaryGate {
+    self := BinaryGate{ op: op, in1: in1, in2: in2 }
     self.id = ident
     
     return &self
 }
 
-func (self *BinaryOp) Output() uint16 {
+func (self *BinaryGate) Output() uint16 {
     in1 := self.in1.Output()
     in2 := self.in2.Output()
     
@@ -93,43 +93,43 @@ func (self *BinaryOp) Output() uint16 {
     }
 }
 
-var opRe = regexp.MustCompile(
+var gateRe = regexp.MustCompile(
     `(?:(?P<val>\w+)|(?P<in1>\w+)? (?P<op>\w+) (?P<in2>\w+)) -> (?P<id>\w+)`,
 )
-func ParseOp( line string, ops map[string]Oper ) Oper {
-    opInfo := util.FindAllNamed(opRe, line)
+func ParseGate( line string, gates map[string]Gate ) Gate {
+    gateInfo := util.FindAllNamed(gateRe, line)
 
-    var op Oper
-    switch opInfo["op"] {
+    var gate Gate
+    switch gateInfo["op"] {
         case "NOT":
-            in := getOp( opInfo["in"], ops )
-            op = NewUnaryOp( opInfo["id"], opInfo["op"], in )
+            in := getGate( gateInfo["in"], gates )
+            gate = NewUnaryGate( gateInfo["id"], gateInfo["op"], in )
         case "AND", "OR", "LSHIFT", "RSHIFT":
-            in1 := getOp( opInfo["in1"], ops )
-            in2 := getOp( opInfo["in2"], ops )
-            op = NewBinaryOp( opInfo["id"], opInfo["op"], in1, in2 )
+            in1 := getGate( gateInfo["in1"], gates )
+            in2 := getGate( gateInfo["in2"], gates )
+            gate = NewBinaryGate( gateInfo["id"], gateInfo["op"], in1, in2 )
         default:
-            val, err := parseUint16( opInfo["val"] )
+            val, err := parseUint16( gateInfo["val"] )
             if err == nil {
-                op = NewConstOp( opInfo["id"], val )
+                gate = NewConstGate( gateInfo["id"], val )
             } else {
-                // Passthrough op
-                in := getOp( opInfo["id"], ops ) 
-                op = NewUnaryOp( opInfo["id"], "PASS", in )
+                // Passthrough gate
+                in := getGate( gateInfo["id"], gates ) 
+                gate = NewUnaryGate( gateInfo["id"], "PASS", in )
             }
     }
     
-    ops[op.ID()] = op
+    gates[gate.ID()] = gate
     
-    return op
+    return gate
 }
 
-func getOp( maybe string, ops map[string]Oper ) Oper {
+func getGate( maybe string, gates map[string]Gate ) Gate {
     num, err := parseUint16( maybe )
     if err == nil {
-        return NewConstOp( "", num )
+        return NewConstGate( "", num )
     } else {
-        return ops[maybe]
+        return gates[maybe]
     }
 }
 
