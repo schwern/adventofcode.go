@@ -4,7 +4,6 @@ import(
     "testing"
     "strings"
     "strconv"
-    "fmt"
     "github.com/schwern/adventofcode2015/testutil"
     "github.com/schwern/adventofcode2015/day02"
     "github.com/schwern/adventofcode2015/util"
@@ -47,7 +46,7 @@ func parseInputs( filename string ) chan []int {
             for i, arg := range strings.Split(line, "x") {
                 num, err := strconv.Atoi(arg)
                 if err != nil {
-                    panic(fmt.Sprintf("Can't convert %s to integer", arg))
+                    util.Panicf("Can't convert %s to integer", arg)
                 }
                 
                 args[i] = num

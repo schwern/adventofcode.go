@@ -2,7 +2,6 @@ package day06
 
 import(
     "regexp"
-    "fmt"
     "strconv"
     "github.com/schwern/adventofcode2015/util"
 )
@@ -33,7 +32,7 @@ func MakeLights() [][]int {
 func findAllNamed( re *regexp.Regexp, str string ) map[string]string {
     match := re.FindStringSubmatch( str )
     if match == nil {
-        panic(fmt.Sprintf("Unknown instruction '%v'", str))
+        util.Panicf("Unknown instruction '%v'", str)
     }
     
     params := make(map[string]string)
@@ -65,7 +64,7 @@ func parseInstruction( instruction string ) (int, [2]int, [2]int) {
         case "turn on":     cmd = ON
         case "turn off":    cmd = OFF
         default:
-            panic(fmt.Sprintf("Unknown command '%v'", parsed["cmd"]))
+            util.Panicf("Unknown command '%v'", parsed["cmd"])
     }
     
     start := [2]int{ mustAtoi(parsed["x1"]), mustAtoi(parsed["y1"]) }

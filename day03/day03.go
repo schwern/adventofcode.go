@@ -1,6 +1,8 @@
 package day03
 
-import "fmt"
+import(
+    "github.com/schwern/adventofcode2015/util"
+)
 
 func parseDirection( direction rune ) (int, int) {
     switch direction {
@@ -13,7 +15,8 @@ func parseDirection( direction rune ) (int, int) {
         case '>':
             return 1, 0
         default:
-            panic(fmt.Sprintf("Unknown direction %v", direction))
+            util.Panicf("Unknown direction %v", direction)
+            return 0,0
     }
 }
 

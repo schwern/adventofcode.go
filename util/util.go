@@ -4,12 +4,17 @@ import(
     "bufio"
     "os"
     "io/ioutil"
+    "fmt"
 )
 
 func Check( err error ) {
     if err != nil {
         panic(err)
     }
+}
+
+func Panicf( format string, args ...interface{}) {
+    panic(fmt.Sprintf( format, args... ))
 }
 
 func LineChannel( filename string ) (chan string) {
