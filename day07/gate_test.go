@@ -40,11 +40,3 @@ func TestBinaryGate( t *testing.T ) {
         testutil.AssertEq( t, gate.Output(), test.want )
     }
 }
-
-func TestParseGate( t *testing.T ) {
-    gates := make( map[string]day07.Gate )        
-    gate := day07.ParseGate( "123 -> x", gates )
-    
-    testutil.AssertEq( t, gate.Output(), uint16(123) )
-    testutil.AssertEq( t, gates["x"], gate )
-}
