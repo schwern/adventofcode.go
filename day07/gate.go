@@ -7,6 +7,7 @@ import(
 type Gate interface {
     Output() uint16
     ID() string
+    SetID(string)
 }
 
 type BaseGate struct {
@@ -15,6 +16,10 @@ type BaseGate struct {
 
 func (self *BaseGate) ID() string {
     return self.id
+}
+
+func (self *BaseGate) SetID( id string ) {
+    self.id = id
 }
 
 type ConstGate struct {
@@ -88,5 +93,23 @@ func (self *BinaryGate) Output() uint16 {
         default:
             util.Panicf("Unknown op %v", self.op)
             return 0
+    }
+}
+
+func MakeGate(id string, op string, inputs []Gate) Gate {
+    if op == "CONST" {
+        gate := inputs[0]
+        gate.SetID(id)
+        return gate
+    }
+    
+    switch len(inputs) {
+        case 1:
+            return NewUnaryGate( id, op, inputs[0] )
+        case 2:
+            return NewBinaryGate( id, op, inputs[0], inputs[1] )
+        default:
+            util.Panicf("Wrong number of inputs: %v.", len(inputs))
+            return nil
     }
 }

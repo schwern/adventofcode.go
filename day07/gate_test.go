@@ -40,3 +40,21 @@ func TestBinaryGate( t *testing.T ) {
         testutil.AssertEq( t, gate.Output(), test.want )
     }
 }
+
+func TestMakeGate( t *testing.T ) {
+    in1 := day07.NewConstGate("", 123)
+    in2 := day07.NewConstGate("", 234)
+    
+    tests := []struct{ id string; op string; inputs []day07.Gate; output uint16 }{
+        { "x", "CONST", []day07.Gate{ in1 }, in1.Output() },
+        { "z", "AND",   []day07.Gate{ in1, in2 }, in1.Output() & in2.Output() },
+        { "f", "NOT",   []day07.Gate{ in1 }, ^in1.Output() },
+    }
+    
+    for _, test := range tests {
+        gate := day07.MakeGate( test.id, test.op, test.inputs )
+        
+        testutil.AssertEq( t, gate.ID(), test.id )
+        testutil.AssertEq( t, gate.Output(), test.output )
+    }
+}
