@@ -7,7 +7,7 @@ import(
     "github.com/schwern/adventofcode2015/util"
 )
 
-var input_file = "../testdata/day01.txt"
+var input_file = "testdata/input.txt"
 
 func TestFindFloor(t *testing.T) {
     tests := []testutil.TestCase {

@@ -7,7 +7,7 @@ import(
     "github.com/schwern/adventofcode2015/day06"
 )
 
-var Input_File = "../testdata/day06.txt"
+var Input_File = "testdata/input.txt"
 
 func assertLightsEq( t *testing.T, have [][]int, want [][]int ) {
     if len(have) != len(want) {

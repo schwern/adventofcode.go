@@ -9,7 +9,7 @@ import(
     "github.com/schwern/adventofcode2015/util"
 )
 
-var input_file = "../testdata/day07.txt"
+var input_file = "testdata/input.txt"
 
 func TestParseGate( t *testing.T ) {
     tests := []struct{ arg string; id string; op string; inputs []string }{

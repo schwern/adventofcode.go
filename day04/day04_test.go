@@ -6,7 +6,7 @@ import(
     "github.com/schwern/adventofcode2015/day04"
 )
 
-var Input_File = "../testdata/day04.txt"
+var Input_File = "testdata/input.txt"
 
 func TestMineAdventCoin( t *testing.T ) {
     tests := []testutil.TestCase{

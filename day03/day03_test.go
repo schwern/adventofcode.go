@@ -7,7 +7,7 @@ import(
     "github.com/schwern/adventofcode2015/util"
 )
 
-var Input_File = "../testdata/day03.txt"
+var Input_File = "testdata/input.txt"
 
 func TestPresentsDelivered( t *testing.T ) {
     tests := []testutil.TestCase{

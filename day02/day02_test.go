@@ -9,7 +9,7 @@ import(
     "github.com/schwern/adventofcode2015/util"
 )
 
-var Input_File = "../testdata/day02.txt"
+var Input_File = "testdata/input.txt"
 
 func TestWrappingPaperNeeded( t *testing.T ) {
     tests := []struct{ l, w, h int; want int } {

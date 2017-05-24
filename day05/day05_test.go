@@ -7,7 +7,7 @@ import(
     "github.com/schwern/adventofcode2015/day05"
 )
 
-var Input_File = "../testdata/day05.txt"
+var Input_File = "testdata/input.txt"
 
 type checkFunc func( string ) bool
 
