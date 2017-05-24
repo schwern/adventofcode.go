@@ -84,3 +84,16 @@ func TestDay07Part01( t *testing.T ) {
     gates := day07.ReadGates( util.LineChannel( input_file ) )
     testutil.AssertEq( t, gates["a"].Output(), uint16(16076) )
 }
+
+func TestDay07Part02( t *testing.T ) {
+    gates := day07.ReadGates( util.LineChannel( input_file ) )
+    num := gates["a"].Output()
+    
+    for _, gate := range gates {
+        gate.ClearOutputCache()
+    }
+
+    gates["b"].SetOutputCache( num )
+    
+    testutil.AssertEq( t, gates["a"].Output(), uint16(2797) )
+}

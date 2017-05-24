@@ -8,6 +8,8 @@ type Gate interface {
     Output() uint16
     ID() string
     SetID(string)
+    ClearOutputCache()
+    SetOutputCache( uint16 )
 }
 
 type BaseGate struct {
@@ -24,18 +26,27 @@ func (self *BaseGate) SetID( id string ) {
     self.id = id
 }
 
+func (self *BaseGate) ClearOutputCache() {
+    self.cached = false
+}
+
+func (self *BaseGate) SetOutputCache( val uint16 ) {
+    self.out = val
+    self.cached = true
+}
+
 type ConstGate struct {
     BaseGate
-    val uint16
 }
 
 func (self *ConstGate) Output() uint16 {
-    return self.val
+    return self.out
 }
 
 func NewConstGate( id string, val uint16 ) *ConstGate {
-    self := ConstGate{ val: val }
+    self := ConstGate{}
     self.id = id
+    self.SetOutputCache( val )
     
     return &self
 }
@@ -58,18 +69,19 @@ func (self *UnaryGate) Output() uint16 {
         return self.out
     }
     
+    var val uint16
     switch self.op {
         case "NOT":
-            self.out = ^self.in.Output()
+            val = ^self.in.Output()
         case "PASS":
-            self.out = self.in.Output()
+            val = self.in.Output()
         default:
             util.Panicf("Unknown op: %v", self.op)
             return 0
     }
     
-    self.cached = true
-    return self.out
+    self.SetOutputCache( val )
+    return val
 }
 
 type BinaryGate struct {
@@ -94,22 +106,23 @@ func (self *BinaryGate) Output() uint16 {
     in1 := self.in1.Output()
     in2 := self.in2.Output()
     
+    var val uint16
     switch self.op {
         case "AND":
-            self.out = in1 & in2
+            val = in1 & in2
         case "OR":
-            self.out = in1 | in2
+            val = in1 | in2
         case "LSHIFT":
-            self.out = in1 << in2
+            val = in1 << in2
         case "RSHIFT":
-            self.out = in1 >> in2
+            val = in1 >> in2
         default:
             util.Panicf("Unknown op %v", self.op)
             return 0
     }
     
-    self.cached = true
-    return self.out
+    self.SetOutputCache( val )
+    return val
 }
 
 func MakeGate(id string, op string, inputs []Gate) Gate {
