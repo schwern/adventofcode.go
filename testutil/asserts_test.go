@@ -1,7 +1,7 @@
 package testutil_test
 
 import(
-    "github.com/schwern/testutil"
+    "github.com/schwern/adventofcode2015/testutil"
     "testing"
 )
 
