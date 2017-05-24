@@ -12,6 +12,8 @@ type Gate interface {
 
 type BaseGate struct {
     id string
+    out uint16
+    cached bool
 }
 
 func (self *BaseGate) ID() string {
@@ -52,15 +54,22 @@ func NewUnaryGate( id string, op string, in Gate ) *UnaryGate {
 }
 
 func (self *UnaryGate) Output() uint16 {
+    if self.cached {
+        return self.out
+    }
+    
     switch self.op {
         case "NOT":
-            return ^self.in.Output()
+            self.out = ^self.in.Output()
         case "PASS":
-            return self.in.Output()
+            self.out = self.in.Output()
         default:
             util.Panicf("Unknown op: %v", self.op)
             return 0
     }
+    
+    self.cached = true
+    return self.out
 }
 
 type BinaryGate struct {
@@ -78,22 +87,29 @@ func NewBinaryGate( ident string, op string, in1 Gate, in2 Gate ) *BinaryGate {
 }
 
 func (self *BinaryGate) Output() uint16 {
+    if self.cached {
+        return self.out
+    }
+    
     in1 := self.in1.Output()
     in2 := self.in2.Output()
     
     switch self.op {
         case "AND":
-            return in1 & in2
+            self.out = in1 & in2
         case "OR":
-            return in1 | in2
+            self.out = in1 | in2
         case "LSHIFT":
-            return in1 << in2
+            self.out = in1 << in2
         case "RSHIFT":
-            return in1 >> in2
+            self.out = in1 >> in2
         default:
             util.Panicf("Unknown op %v", self.op)
             return 0
     }
+    
+    self.cached = true
+    return self.out
 }
 
 func MakeGate(id string, op string, inputs []Gate) Gate {

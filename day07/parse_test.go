@@ -6,7 +6,10 @@ import(
     "testing"
     "github.com/schwern/adventofcode2015/day07"
     "github.com/schwern/adventofcode2015/testutil"
+    "github.com/schwern/adventofcode2015/util"
 )
+
+var input_file = "../testdata/day07.txt"
 
 func TestParseGate( t *testing.T ) {
     tests := []struct{ arg string; id string; op string; inputs []string }{
@@ -75,4 +78,9 @@ func shuffle( list []string ) {
         j := rand.Intn( i + 1 )
         list[i], list[j] = list[j], list[i]
     }
+}
+
+func TestDay07Part01( t *testing.T ) {
+    gates := day07.ReadGates( util.LineChannel( input_file ) )
+    testutil.AssertEq( t, gates["a"].Output(), uint16(16076) )
 }
