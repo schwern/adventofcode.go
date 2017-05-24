@@ -1,7 +1,7 @@
 package day07
 
 import(
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 type Gate interface {

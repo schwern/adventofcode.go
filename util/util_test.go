@@ -3,8 +3,8 @@ package util_test
 import(
     "runtime"
     "testing"
-    "github.com/schwern/adventofcode2015/testutil"
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 func TestLineChannel( t *testing.T ) {

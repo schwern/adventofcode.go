@@ -2,8 +2,8 @@ package day07_test
 
 import(
     "testing"
-    "github.com/schwern/adventofcode2015/day07"
-    "github.com/schwern/adventofcode2015/testutil"
+    "github.com/schwern/adventofcode.go/2015/day07"
+    "github.com/schwern/adventofcode.go/testutil"
 )
 
 func TestConstGate( t *testing.T ) {

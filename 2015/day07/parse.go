@@ -4,7 +4,7 @@ import(
     "regexp"
     "strconv"
     "sync"
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 type Gates map[string]Gate

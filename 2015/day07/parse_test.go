@@ -4,9 +4,9 @@ import(
     "math/rand"
     "time"
     "testing"
-    "github.com/schwern/adventofcode2015/day07"
-    "github.com/schwern/adventofcode2015/testutil"
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/2015/day07"
+    "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 var input_file = "testdata/input.txt"

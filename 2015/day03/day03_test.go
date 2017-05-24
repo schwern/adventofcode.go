@@ -2,9 +2,9 @@ package day03_test
 
 import(
     "testing"
-    "github.com/schwern/adventofcode2015/day03"
-    "github.com/schwern/adventofcode2015/testutil"
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/2015/day03"
+    "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 var Input_File = "testdata/input.txt"

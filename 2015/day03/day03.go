@@ -1,7 +1,7 @@
 package day03
 
 import(
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 func parseDirection( direction rune ) (int, int) {

@@ -3,7 +3,7 @@ package day06
 import(
     "regexp"
     "strconv"
-    "github.com/schwern/adventofcode2015/util"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 var LightsY = 1000
