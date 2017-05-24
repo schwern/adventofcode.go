@@ -1,27 +1,78 @@
 package day07_test
 
 import(
+    "math/rand"
+    "time"
     "testing"
     "github.com/schwern/adventofcode2015/day07"
     "github.com/schwern/adventofcode2015/testutil"
 )
 
 func TestParseGate( t *testing.T ) {
-    gates := make( map[string]day07.Gate )        
-    gate := day07.ParseGate( "123 -> x", gates )
+    tests := []struct{ arg string; id string; op string; inputs []string }{
+        { "123 -> x",       "x", "CONST", []string{"123"} },
+        { "x AND y -> z",   "z", "AND",   []string{"x", "y"} },
+        { "NOT e -> f",     "f", "NOT",   []string{"e"} },
+    }
     
-    testutil.AssertEq( t, gate.Output(), uint16(123) )
-    testutil.AssertEq( t, gates["x"], gate )
+    for _, test := range tests {
+        id, op, inputs := day07.ParseGate(test.arg)
+    
+        testutil.AssertEq( t, id, test.id )
+        testutil.AssertEq( t, op, test.op )
+        testutil.AssertStringSliceEq( t, inputs, test.inputs )
+    }
 }
 
-func TestParseGate_GatesOutOfOrder( t *testing.T ) {
-    gates := make( map[string]day07.Gate )
+func TestReadGates_InOrder( t *testing.T ) {
+    lines := []string{
+        "123 -> x",
+        "456 -> y",
+        "x AND y -> d",
+        "x OR y -> e",
+        "x LSHIFT 2 -> f",
+        "y RSHIFT 2 -> g",
+        "NOT x -> h",
+        "NOT y -> i",
+    }
     
-    c := day07.ParseGate( "a AND b -> c", gates )
-    day07.ParseGate( "a -> 10", gates )
-    day07.ParseGate( "b -> 12", gates )
+    tests := []struct{ id string; want uint16 }{
+        { "d", 72 },
+        { "e", 507 },
+        { "f", 492 },
+        { "g", 114 },
+        { "h", 65412 },
+        { "i", 65079 },
+        { "x", 123 },
+        { "y", 456 },
+    }
     
-    t.Skip("Out of order parsing is busted.")
+    testReadGates( t, lines, tests )
+    shuffle(lines)
+    testReadGates( t, lines, tests )
+}
+
+func testReadGates( t *testing.T, lines []string, tests []struct{id string;want uint16} ) {
+    lineCh := make( chan string, len(lines) )
+    for _, line := range lines {
+        lineCh <- line
+    }
+    close(lineCh)
+
+    gates := day07.ReadGates( lineCh )
     
-    testutil.AssertEq( t, c.Output(), uint16(8) )
+    testutil.AssertEq( t, len(gates), len(lines) )
+
+    for _, test := range tests {
+        testutil.AssertEq( t, gates[test.id].Output(), test.want )
+    }
+}
+
+func shuffle( list []string ) {
+    rand.Seed( time.Now().Unix() )
+    
+    for i := range list {
+        j := rand.Intn( i + 1 )
+        list[i], list[j] = list[j], list[i]
+    }
 }
