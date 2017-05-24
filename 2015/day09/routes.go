@@ -10,7 +10,7 @@ type Routes struct {
     is_symetric bool
 }
 
-func NewRoutes( symetric bool ) Routes {
+func NewRoutes( symetric bool ) *Routes {
     self := Routes{
         edges: make( [][]int, 0 ),
         names: make( map[string]int ),
@@ -18,7 +18,7 @@ func NewRoutes( symetric bool ) Routes {
     
     self.is_symetric = symetric
     
-    return self
+    return &self
 }
 
 func (self *Routes) addNode( name string ) int {
