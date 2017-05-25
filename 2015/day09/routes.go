@@ -74,3 +74,11 @@ func (self *Routes) AddRoute( a, b string, dist int ) {
 func (self *Routes) GetRoute( a, b string ) int {
     return self.edges[ self.mustGetNodeIdx(a) ][ self.mustGetNodeIdx(b) ]
 }
+
+func (self *Routes) GetRouteByIdx( a, b int ) int {
+    return self.edges[a][b]
+}
+
+func (self *Routes) NumNodes() int {
+    return len(self.edges)
+}
