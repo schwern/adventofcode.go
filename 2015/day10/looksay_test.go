@@ -9,21 +9,25 @@ import(
 var Input = "1113122113"
 
 func TestLookSay( t *testing.T ) {
-    tests := []struct{ arg string; want string }{
-        { "1", "11" },
-        { "11", "21" },
-        { "21", "1211" },
-        { "1211", "111221" },
-        { "111221", "312211" },
+    tests := []struct{ arg []byte; want []byte }{
+        { []byte("1"), []byte("11") },
+        { []byte("11"), []byte("21") },
+        { []byte("21"), []byte("1211") },
+        { []byte("1211"), []byte("111221") },
+        { []byte("111221"), []byte("312211") },
     }
     
     for _, test := range tests {
-        testutil.AssertEq( t, day10.LookSay( test.arg ), test.want )
+        testutil.AssertEq(
+            t,
+            string( day10.LookSay( test.arg ) ),
+            string( test.want),
+        )
     }
 }
 
 func TestPart1( t *testing.T ) {
-    have := Input
+    have := []byte(Input)
     for i := 0; i < 40; i++ {
         have = day10.LookSay( have )
     }
