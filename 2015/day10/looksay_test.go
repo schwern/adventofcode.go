@@ -26,11 +26,17 @@ func TestLookSay( t *testing.T ) {
     }
 }
 
-func TestPart1( t *testing.T ) {
+func TestPart1And2( t *testing.T ) {
+    // Part 1
     have := []byte(Input)
     for i := 0; i < 40; i++ {
         have = day10.LookSay( have )
     }
-    
     testutil.AssertEq( t, len(have), 360154 )
+    
+    // Part 2
+    for i := 0; i < 10; i++ {
+        have = day10.LookSay( have )
+    }
+    testutil.AssertEq( t, len(have), 5103798 )
 }
