@@ -4,7 +4,10 @@ import(
     "testing"
     "github.com/schwern/adventofcode.go/2015/day09"
     "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
+
+var input_file = "testdata/input.txt"
 
 func TestBruteForce( t *testing.T ) {
     routes := day09.NewRoutes( true )
@@ -22,4 +25,16 @@ func TestParseLine( t *testing.T ) {
     testutil.AssertEq( t, a, "London" )
     testutil.AssertEq( t, b, "Dublin" )
     testutil.AssertEq( t, dist, 464 )
+}
+
+func TestPart1( t *testing.T ) {
+    lines := util.LineChannel( input_file )
+    routes := day09.NewRoutes( true )
+    
+    for line := range lines {
+        a, b, dist := day09.ParseLine( line )
+        routes.AddRoute( a, b, dist )
+    }
+    
+    testutil.AssertEq( t, day09.BruteForce( routes ), 251 )
 }

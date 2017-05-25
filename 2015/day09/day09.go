@@ -12,28 +12,33 @@ func BruteForce( routes *Routes ) int {
     for i := range nodes {
         nodes[i] = i
     }
-    
+        
     perms := NewPermutationChan( nodes )
     ch := make( chan int )
     
     var wg sync.WaitGroup
     for perm := range perms {
         wg.Add(1)
-        go func() {
+        
+        go func( perm []int ) {
             defer wg.Done()
             total := 0
+
             for i := 1; i < len(perm); i++ {
-                dist := routes.GetRouteByIdx( i-1, i )
+                a := perm[i-1]
+                b := perm[i]
+                dist := routes.GetRouteByIdx( a, b )
+                                
                 if dist == 0 {
-                    ch <- math.MaxInt32
-                    return
+                    total = math.MaxInt32
+                    break
                 } else {
                     total += dist
                 }
             }
-            
+                        
             ch <- total
-        }()
+        }(perm)
     }
     
     go func() {
