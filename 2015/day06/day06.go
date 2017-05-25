@@ -2,7 +2,6 @@ package day06
 
 import(
     "regexp"
-    "strconv"
     "github.com/schwern/adventofcode.go/util"
 )
 
@@ -33,13 +32,6 @@ var instruction_re = regexp.MustCompile(
     `(?P<cmd>turn on|turn off|toggle) (?P<x1>\d+),(?P<y1>\d+) through (?P<x2>\d+),(?P<y2>\d+)`,
 )
 
-func mustAtoi( str string ) int {
-    num, err := strconv.Atoi(str)
-    util.Check(err)
-    
-    return num
-}
-
 func parseInstruction( instruction string ) (int, [2]int, [2]int) {
     parsed := util.FindAllNamed(instruction_re, instruction)
     
@@ -52,8 +44,8 @@ func parseInstruction( instruction string ) (int, [2]int, [2]int) {
             util.Panicf("Unknown command '%v'", parsed["cmd"])
     }
     
-    start := [2]int{ mustAtoi(parsed["x1"]), mustAtoi(parsed["y1"]) }
-    end   := [2]int{ mustAtoi(parsed["x2"]), mustAtoi(parsed["y2"]) }
+    start := [2]int{ util.MustAtoi(parsed["x1"]), util.MustAtoi(parsed["y1"]) }
+    end   := [2]int{ util.MustAtoi(parsed["x2"]), util.MustAtoi(parsed["y2"]) }
     
     return cmd, start, end
 }

@@ -6,7 +6,15 @@ import(
     "os"
     "io/ioutil"
     "fmt"
+    "strconv"
 )
+
+func MustAtoi( str string ) int {
+    num, err := strconv.Atoi(str)
+    Check(err)
+    
+    return num
+}
 
 func FindAllNamed( re *regexp.Regexp, str string ) map[string]string {
     match := re.FindStringSubmatch( str )
@@ -25,7 +33,7 @@ func FindAllNamed( re *regexp.Regexp, str string ) map[string]string {
 
 func Check( err error ) {
     if err != nil {
-        panic(err)
+        panic(err.Error())
     }
 }
 

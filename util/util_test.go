@@ -18,3 +18,13 @@ func TestLineChannel( t *testing.T ) {
     }
     testutil.AssertEq( t, true, true )
 }
+
+func TestMustAtoi( t *testing.T ) {
+    testutil.AssertEq( t, util.MustAtoi("-1234"), -1234 )
+    testutil.AssertEq( t, util.MustAtoi("0"), 0 )
+
+    defer testutil.AssertPanicf(t,
+        `strconv.Atoi: parsing "one": invalid syntax`,
+    )
+    util.MustAtoi("one")
+}
