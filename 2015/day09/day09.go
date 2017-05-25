@@ -7,7 +7,7 @@ import(
     "github.com/schwern/adventofcode.go/util"
 )
 
-func BruteForce( routes *Routes ) int {
+func bruteForce( routes *Routes ) chan int {
     nodes := make( []int, routes.NumNodes() )
     for i := range nodes {
         nodes[i] = i
@@ -30,7 +30,7 @@ func BruteForce( routes *Routes ) int {
                 dist := routes.GetRouteByIdx( a, b )
                                 
                 if dist == 0 {
-                    total = math.MaxInt32
+                    total = -1
                     break
                 } else {
                     total += dist
@@ -46,16 +46,50 @@ func BruteForce( routes *Routes ) int {
         close(ch)
     }()
     
+    return ch
+}
+
+func min( a, b int ) int {
+    if a < b {
+        return a
+    } else {
+        return b
+    }
+}
+
+func max( a, b int ) int {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
+}
+
+func BestRouteBruteForce( routes *Routes ) int {
+    ch := bruteForce( routes )
+    
     shortest := math.MaxInt32
     for dist := range ch {
-        if dist < shortest {
-            shortest = dist
+        if dist > 0 {
+            shortest = min(dist, shortest)
         }
     }
     
     return shortest
 }
 
+func WorstRouteBruteForce( routes *Routes ) int {
+    ch := bruteForce( routes )
+    
+    longest := 0
+    for dist := range ch {
+        if dist > 0 {
+            longest = max(dist, longest)
+        }
+    }
+    
+    return longest
+}
 
 var lineRe = regexp.MustCompile(
     `(\w+) to (\w+) = (\d+)`,
