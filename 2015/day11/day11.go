@@ -6,6 +6,10 @@ var pairsNeeded = 2
 // Doing this char by char to do it in one pass of the string
 // with early exit.
 func IsValidPassword( pass string ) bool {
+    return isValidPassword( []byte(pass) )
+}
+
+func isValidPassword( pass []byte ) bool {
     // Exactly 8 characters
     if len(pass) != validLength {
         return false
@@ -58,7 +62,7 @@ func NextPassword( orig string ) string {
     pass := make( []byte, len(orig) )
     copy( pass, orig )
     
-    for IncByteSlice(pass); !IsValidPassword(string(pass)); IncByteSlice(pass) {
+    for IncByteSlice(pass); !isValidPassword(pass); IncByteSlice(pass) {
     }
     
     return string(pass)
