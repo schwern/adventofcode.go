@@ -34,13 +34,15 @@ func TestIsValidPassword( t *testing.T ) {
     }
 }
 
-func TestIncString( t *testing.T ) {
+func TestIncByteSlice( t *testing.T ) {
     tests := []string{
         "xx", "xy", "xz", "ya", "yb",
     }
     
     for i := 1; i < len(tests); i++ {
-        testutil.AssertEq( t, day11.IncString(tests[i-1]), tests[i] )
+        have := []byte(tests[i-1])
+        day11.IncByteSlice(have)
+        testutil.AssertEq( t, string(have), tests[i] )
     }
 }
 
@@ -50,7 +52,7 @@ func TestNextPassword( t *testing.T ) {
         { "ghijklmn", "ghjaabcc" },
     }
     
-    for _,test := range tests {
+    for _,test := range tests {        
         have := day11.NextPassword( test.arg )
         testutil.AssertEq( t, have, test.want )
     }

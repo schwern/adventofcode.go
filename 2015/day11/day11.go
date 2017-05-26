@@ -55,24 +55,22 @@ func IsValidPassword( pass string ) bool {
 }
 
 func NextPassword( orig string ) string {
-    var pass string
-    for pass = IncString(orig); !IsValidPassword(pass); pass = IncString(pass) {
+    pass := make( []byte, len(orig) )
+    copy( pass, orig )
+    
+    for IncByteSlice(pass); !IsValidPassword(string(pass)); IncByteSlice(pass) {
     }
     
-    return pass
+    return string(pass)
 }
 
-func IncString( str string ) string {
-    slice := []byte(str)
-    
-    for i := len(slice)-1; i >= 0; i-- {
-        if slice[i] < 'z' {
-            slice[i] = slice[i]+1
-            break
+func IncByteSlice( str []byte ) {
+    for i := len(str)-1; i >= 0; i-- {
+        if str[i] < 'z' {
+            str[i] = str[i]+1
+            return
         } else {
-            slice[i] = 'a'
+            str[i] = 'a'
         }
     }
-    
-    return string(slice)
 }
