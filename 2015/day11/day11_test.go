@@ -57,3 +57,11 @@ func TestNextPassword( t *testing.T ) {
         testutil.AssertEq( t, have, test.want )
     }
 }
+
+func TestParts1And2( t *testing.T ) {
+    part1 := day11.NextPassword( input )
+    testutil.AssertEq( t, part1, "cqjxxyzz" )
+    
+    part2 := day11.NextPassword( part1 )
+    testutil.AssertEq( t, part2, "cqkaabcc" )
+}
