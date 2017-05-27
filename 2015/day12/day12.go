@@ -6,7 +6,7 @@ import(
     "github.com/schwern/adventofcode.go/util"
 )
 
-func SumNums( in string ) float64 {
+func SumNums( in string, skip *string ) float64 {
     var data interface{}
     err := json.Unmarshal( []byte(in), &data )
     util.Check(err)
@@ -18,7 +18,7 @@ func SumNums( in string ) float64 {
         defer wg.Wait()
         
         wg.Add(1)
-        go readNums( data, out, &wg )
+        go readNums( data, skip, out, &wg )
     }()
     
     total := 0.0
@@ -29,10 +29,8 @@ func SumNums( in string ) float64 {
     return total
 }
 
-func readNums( data interface{}, out chan float64, wg *sync.WaitGroup ) {
+func readNums( data interface{}, skip *string, out chan float64, wg *sync.WaitGroup ) {
     defer wg.Done()
-    
-    _ = "breakpoint"
     
     switch d := data.(type) {
         case int64, float64:
@@ -42,12 +40,20 @@ func readNums( data interface{}, out chan float64, wg *sync.WaitGroup ) {
         case []interface{}:
             for _,u := range d {
                 wg.Add(1)
-                go readNums( u, out, wg )
+                go readNums( u, skip, out, wg )
             }
-        case map[string]interface{}:
+        case map[string]interface{}:            
+            if skip != nil {
+                for _,u := range d {
+                    if u == *skip {
+                        return
+                    }
+                }
+            }
+            
             for _,u := range d {
                 wg.Add(1)
-                go readNums( u, out, wg )
+                go readNums( u, skip, out, wg )
             }
         default:
             util.Panicf( "%v %T is of a type I don't know how to handle", data, data )
