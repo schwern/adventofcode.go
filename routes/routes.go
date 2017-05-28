@@ -100,18 +100,20 @@ func (self *Routes) PathCost( path []int ) int {
             total += dist
         }
     }
-    
+        
     return total
 }
 
-func (self *Routes) TryAllPaths() chan int {
+func (self *Routes) AllPathsChan() chan []int {
     nodes := make( []int, self.NumNodes() )
     for i := range nodes {
         nodes[i] = i
     }
-    perms := permutation.NewPermutationChan( nodes )
-    
-    return self.TryPaths( perms )
+    return permutation.NewPermutationChan( nodes )
+}
+
+func (self *Routes) TryAllPaths() chan int {    
+    return self.TryPaths( self.AllPathsChan() )
 }
 
 func (self *Routes) TryPaths( paths chan []int ) chan int {
