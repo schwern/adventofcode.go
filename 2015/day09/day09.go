@@ -4,6 +4,7 @@ import(
     "math"
     "sync"
     "regexp"
+    "github.com/schwern/adventofcode.go/permutation"
     "github.com/schwern/adventofcode.go/util"
 )
 
@@ -13,7 +14,7 @@ func bruteForce( routes *Routes ) chan int {
         nodes[i] = i
     }
         
-    perms := NewPermutationChan( nodes )
+    perms := permutation.NewPermutationChan( nodes )
     ch := make( chan int )
     
     var wg sync.WaitGroup

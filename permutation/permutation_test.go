@@ -1,9 +1,9 @@
-package day09_test
+package permutation_test
 
 import(
     "testing"
     "github.com/schwern/adventofcode.go/testutil"
-    "github.com/schwern/adventofcode.go/2015/day09"
+    "github.com/schwern/adventofcode.go/permutation"
 )
 
 func TestPermutation( t *testing.T ) {
@@ -21,7 +21,7 @@ func TestPermutation( t *testing.T ) {
     }
 
     for _, test := range tests {
-        perm := day09.NewPermutation( test.arg )
+        perm := permutation.NewPermutation( test.arg )
     
         i := 0
         for next := perm.Next(); next != nil; next = perm.Next() {
@@ -30,7 +30,7 @@ func TestPermutation( t *testing.T ) {
         }
 
         i = 0
-        ch := day09.NewPermutationChan( test.arg )
+        ch := permutation.NewPermutationChan( test.arg )
         for set := range ch {
             testutil.AssertIntSliceEq( t, set, test.want[i] )
             i++

@@ -1,4 +1,4 @@
-package day09
+package permutation
 
 // Based on https://stackoverflow.com/a/30230552/14660 by Paul Hankin
 
@@ -9,7 +9,7 @@ package day09
 //
 // or
 //
-// permCh := day09.NewPermutationChan( test.arg )
+// permCh := permutation.NewPermutationChan( test.arg )
 // for next := range ch {
 //     ...
 // }
