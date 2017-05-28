@@ -16,6 +16,22 @@ func MustAtoi( str string ) int {
     return num
 }
 
+func MinInt( a, b int ) int {
+    if a < b {
+        return a
+    } else {
+        return b
+    }
+}
+
+func MaxInt( a, b int ) int {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
+}
+
 func FindAllNamed( re *regexp.Regexp, str string ) map[string]string {
     match := re.FindStringSubmatch( str )
     if match == nil {
