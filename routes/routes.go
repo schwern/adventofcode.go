@@ -82,3 +82,22 @@ func (self *Routes) GetRouteByIdx( a, b int ) int {
 func (self *Routes) NumNodes() int {
     return len(self.edges)
 }
+
+func (self *Routes) PathCost( path []int ) int {
+    total := 0
+
+    for i := 1; i < len(path); i++ {
+        a := path[i-1]
+        b := path[i]
+        dist := self.GetRouteByIdx( a, b )
+                        
+        if dist == 0 {
+            total = -1
+            break
+        } else {
+            total += dist
+        }
+    }
+    
+    return total
+}

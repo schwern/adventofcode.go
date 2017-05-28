@@ -24,22 +24,7 @@ func bruteForce( routes *routes.Routes ) chan int {
         
         go func( perm []int ) {
             defer wg.Done()
-            total := 0
-
-            for i := 1; i < len(perm); i++ {
-                a := perm[i-1]
-                b := perm[i]
-                dist := routes.GetRouteByIdx( a, b )
-                                
-                if dist == 0 {
-                    total = -1
-                    break
-                } else {
-                    total += dist
-                }
-            }
-                        
-            ch <- total
+            ch <- routes.PathCost( perm )
         }(perm)
     }
     
