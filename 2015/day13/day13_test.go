@@ -3,8 +3,12 @@ package day13_test
 import(
     "testing"
     "github.com/schwern/adventofcode.go/2015/day13"
+    "github.com/schwern/adventofcode.go/routes"
     "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
+
+var Input_File = "testdata/input.txt"
 
 var Tests = []struct{ Arg string; a,b string; dist int }{
     {
@@ -65,4 +69,26 @@ func TestParseLine( t *testing.T ) {
         testutil.AssertEq( t, b, test.b )
         testutil.AssertEq( t, dist, test.dist )
     }
+}
+
+func TestHappiestSeating( t *testing.T ) {
+    routes := routes.NewRoutes( false )
+    
+    for _,test := range Tests {
+        a, b, dist := day13.ParseLine( test.Arg )
+        routes.AddRoute( a, b, dist )
+    }
+    
+    testutil.AssertEq( t, day13.HappiestSeating( routes ), 330 )
+}
+
+func TestPart1( t *testing.T ) {
+    routes := routes.NewRoutes( false )
+    
+    lines := util.LineChannel( Input_File )
+    for line := range lines {
+        routes.AddRoute( day13.ParseLine( line ) )
+    }
+    
+    testutil.AssertEq( t, day13.HappiestSeating( routes ), 618 )
 }
