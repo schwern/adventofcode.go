@@ -1,13 +1,13 @@
-package day09_test
+package routes_test
 
 import(
     "testing"
-    "github.com/schwern/adventofcode.go/2015/day09"
+    "github.com/schwern/adventofcode.go/routes"
     "github.com/schwern/adventofcode.go/testutil"
 )
 
 func TestAddGetRoute( t *testing.T ) {
-    routes := day09.NewRoutes( true )
+    routes := routes.NewRoutes( true )
         
     routes.AddRoute( "London", "Dublin", 464 )
     routes.AddRoute( "London", "Belfast", 518 )
@@ -22,7 +22,7 @@ func TestAddGetRoute( t *testing.T ) {
 }
 
 func TestGetRouteUnknownRoute( t *testing.T ) {
-    routes := day09.NewRoutes( false )
+    routes := routes.NewRoutes( false )
 
     defer testutil.AssertPanicf( t, "Do not have a node named Foo" )
     routes.GetRoute( "Foo", "Bar" )

@@ -5,10 +5,11 @@ import(
     "sync"
     "regexp"
     "github.com/schwern/adventofcode.go/permutation"
+    "github.com/schwern/adventofcode.go/routes"
     "github.com/schwern/adventofcode.go/util"
 )
 
-func bruteForce( routes *Routes ) chan int {
+func bruteForce( routes *routes.Routes ) chan int {
     nodes := make( []int, routes.NumNodes() )
     for i := range nodes {
         nodes[i] = i
@@ -66,7 +67,7 @@ func max( a, b int ) int {
     }
 }
 
-func BestRouteBruteForce( routes *Routes ) int {
+func BestRouteBruteForce( routes *routes.Routes ) int {
     ch := bruteForce( routes )
     
     shortest := math.MaxInt32
@@ -79,7 +80,7 @@ func BestRouteBruteForce( routes *Routes ) int {
     return shortest
 }
 
-func WorstRouteBruteForce( routes *Routes ) int {
+func WorstRouteBruteForce( routes *routes.Routes ) int {
     ch := bruteForce( routes )
     
     longest := 0

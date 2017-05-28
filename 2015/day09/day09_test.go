@@ -3,6 +3,7 @@ package day09_test
 import(
     "testing"
     "github.com/schwern/adventofcode.go/2015/day09"
+    "github.com/schwern/adventofcode.go/routes"
     "github.com/schwern/adventofcode.go/testutil"
     "github.com/schwern/adventofcode.go/util"
 )
@@ -10,7 +11,7 @@ import(
 var input_file = "testdata/input.txt"
 
 func TestBruteForce( t *testing.T ) {
-    routes := day09.NewRoutes( true )
+    routes := routes.NewRoutes( true )
         
     routes.AddRoute( "London", "Dublin", 464 )
     routes.AddRoute( "London", "Belfast", 518 )
@@ -30,7 +31,7 @@ func TestParseLine( t *testing.T ) {
 
 func TestPart1( t *testing.T ) {
     lines := util.LineChannel( input_file )
-    routes := day09.NewRoutes( true )
+    routes := routes.NewRoutes( true )
     
     for line := range lines {
         a, b, dist := day09.ParseLine( line )
@@ -42,7 +43,7 @@ func TestPart1( t *testing.T ) {
 
 func TestPart2( t *testing.T ) {
     lines := util.LineChannel( input_file )
-    routes := day09.NewRoutes( true )
+    routes := routes.NewRoutes( true )
     
     for line := range lines {
         a, b, dist := day09.ParseLine( line )

@@ -1,4 +1,4 @@
-package day09
+package routes
 
 import(
     "github.com/schwern/adventofcode.go/util"
