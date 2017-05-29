@@ -92,3 +92,19 @@ func TestPart1( t *testing.T ) {
     
     testutil.AssertEq( t, day13.HappiestSeating( routes ), 618 )
 }
+
+func TestPart2( t *testing.T ) {
+    routes := routes.NewRoutes( false )
+    
+    lines := util.LineChannel( Input_File )
+    for line := range lines {
+        a, b, dist := day13.ParseLine( line )
+        routes.AddRoute( a, b, dist )
+        routes.AddRoute( a, "Me", 0 )
+        routes.AddRoute( "Me", a, 0 )
+        routes.AddRoute( b, "Me", 0 )
+        routes.AddRoute( "Me", b, 0 )
+    }
+    
+    testutil.AssertEq( t, day13.HappiestSeating( routes ), 601 )
+}
