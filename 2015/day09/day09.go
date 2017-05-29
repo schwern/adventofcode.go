@@ -12,9 +12,7 @@ func BestRouteBruteForce( routes *routes.Routes ) int {
     
     shortest := math.MaxInt32
     for dist := range ch {
-        if dist > 0 {
-            shortest = util.MinInt(dist, shortest)
-        }
+        shortest = util.MinInt(dist, shortest)
     }
     
     return shortest
@@ -25,9 +23,7 @@ func WorstRouteBruteForce( routes *routes.Routes ) int {
     
     longest := 0
     for dist := range ch {
-        if dist > 0 {
-            longest = util.MaxInt(dist, longest)
-        }
+        longest = util.MaxInt(dist, longest)
     }
     
     return longest

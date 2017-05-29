@@ -14,12 +14,12 @@ func TestAddGetRoute( t *testing.T ) {
     routes.AddRoute( "London", "Belfast", 518 )
     routes.AddRoute( "Dublin", "Belfast", 141 )
 
-    testutil.AssertEq( t, routes.GetRoute( "London", "Dublin" ), 464 )
-    testutil.AssertEq( t, routes.GetRoute( "Dublin", "London" ), 464 )
-    testutil.AssertEq( t, routes.GetRoute( "Belfast", "London" ), 518 )
-    testutil.AssertEq( t, routes.GetRoute( "London", "Belfast" ), 518 )
-    testutil.AssertEq( t, routes.GetRoute( "Dublin", "Belfast" ), 141 )
-    testutil.AssertEq( t, routes.GetRoute( "Belfast", "Dublin" ), 141 )
+    testutil.AssertEq( t, routes.MustGetRoute( "London", "Dublin" ), 464 )
+    testutil.AssertEq( t, routes.MustGetRoute( "Dublin", "London" ), 464 )
+    testutil.AssertEq( t, routes.MustGetRoute( "Belfast", "London" ), 518 )
+    testutil.AssertEq( t, routes.MustGetRoute( "London", "Belfast" ), 518 )
+    testutil.AssertEq( t, routes.MustGetRoute( "Dublin", "Belfast" ), 141 )
+    testutil.AssertEq( t, routes.MustGetRoute( "Belfast", "Dublin" ), 141 )
 }
 
 func TestGetRouteUnknownRoute( t *testing.T ) {

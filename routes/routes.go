@@ -6,15 +6,25 @@ import(
     "github.com/schwern/adventofcode.go/util"
 )
 
+type errorNoRoute struct {}
+func (self *errorNoRoute) Error() string {
+    return "No route exists"
+}
+
+type errorNoPath struct {}
+func (self *errorNoPath) Error() string {
+    return "No path exists"
+}
+
 type Routes struct {
-    edges [][]int
+    edges [][]*int
     names map[string]int
     is_symetric bool
 }
 
 func NewRoutes( symetric bool ) *Routes {
     self := Routes{
-        edges: make( [][]int, 0 ),
+        edges: make( [][]*int, 0 ),
         names: make( map[string]int ),
     }
     
@@ -28,11 +38,11 @@ func (self *Routes) addNode( name string ) int {
     
     // Extend each existing row by 1    
     for i := range self.edges {
-        self.edges[i] = append(self.edges[i], 0)
+        self.edges[i] = append(self.edges[i], nil)
     }
     
     // Add a new row
-    self.edges = append(self.edges, make( []int, len+1) )
+    self.edges = append(self.edges, make( []*int, len+1) )
     
     self.names[name] = len
     
@@ -63,45 +73,61 @@ func (self *Routes) getOrAddNodeIdx( name string ) int {
     return idx
 }
 
-func (self *Routes) AddRoute( a, b string, dist int ) {
+func (self *Routes) AddRoute( a, b string, cost int ) {
     aidx := self.getOrAddNodeIdx( a )
     bidx := self.getOrAddNodeIdx( b )
     
-    self.edges[ aidx ][ bidx ] = dist
+    self.edges[ aidx ][ bidx ] = &cost
     if self.is_symetric {
-        self.edges[ bidx ][ aidx ] = dist
+        self.edges[ bidx ][ aidx ] = &cost
     }
 }
 
-func (self *Routes) GetRoute( a, b string ) int {
-    return self.edges[ self.mustGetNodeIdx(a) ][ self.mustGetNodeIdx(b) ]
+func (self *Routes) GetRoute( a, b string ) (int, error) {
+    return self.GetRouteByIdx( self.mustGetNodeIdx(a), self.mustGetNodeIdx(b) )
 }
 
-func (self *Routes) GetRouteByIdx( a, b int ) int {
-    return self.edges[a][b]
+func (self *Routes) MustGetRoute( a, b string ) int {
+    cost, err := self.GetRoute( a, b )
+    if err != nil {
+        panic(err)
+    }
+    return cost
+}
+
+func (self *Routes) GetRouteByIdx( a, b int ) (int, error) {
+    val := self.edges[a][b]
+    
+    if val == nil {
+        return 0, new(errorNoRoute)
+    } else {
+        return *val, nil
+    }
 }
 
 func (self *Routes) NumNodes() int {
     return len(self.edges)
 }
 
-func (self *Routes) PathCost( path []int ) int {
+func (self *Routes) PathCost( path []int ) (int, error) {
     total := 0
 
+    var error error
     for i := 1; i < len(path); i++ {
         a := path[i-1]
         b := path[i]
-        dist := self.GetRouteByIdx( a, b )
+        cost, err := self.GetRouteByIdx( a, b )
                         
-        if dist == 0 {
-            total = -1
+        if err != nil {
+            error = new(errorNoPath)
+            total = 0
             break
         } else {
-            total += dist
+            total += cost
         }
     }
         
-    return total
+    return total, error
 }
 
 func (self *Routes) AllPathsChan() chan []int {
@@ -125,7 +151,11 @@ func (self *Routes) TryPaths( paths chan []int ) chan int {
         
         go func( path []int ) {
             defer wg.Done()
-            ch <- self.PathCost( path )
+            cost, err := self.PathCost( path )
+            if err != nil {
+                return
+            }
+            ch <- cost
         }(path)
     }
     
