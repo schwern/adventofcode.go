@@ -28,3 +28,12 @@ func TestMustAtoi( t *testing.T ) {
     )
     util.MustAtoi("one")
 }
+
+func TestMaxMinInts( t *testing.T ) {
+    nums := []int{ 0, 10, 9999, -234 }
+    
+    testutil.AssertEq( t, util.MaxIntsIdx( nums ), 2 )
+    testutil.AssertEq( t, util.MaxInts( nums ), 9999 )
+    testutil.AssertEq( t, util.MinIntsIdx( nums ), 3 )
+    testutil.AssertEq( t, util.MinInts( nums ), -234 )
+}

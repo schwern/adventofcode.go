@@ -7,6 +7,7 @@ import(
     "io/ioutil"
     "fmt"
     "strconv"
+    "math"
 )
 
 func MustAtoi( str string ) int {
@@ -14,6 +15,40 @@ func MustAtoi( str string ) int {
     Check(err)
     
     return num
+}
+
+func MaxIntsIdx( ints []int ) int {
+    max := math.MinInt32
+    maxIdx := 0
+    for i,num := range ints {
+        if num > max {
+            max = num
+            maxIdx = i
+        }
+    }
+    
+    return maxIdx
+}
+
+func MaxInts( ints []int ) int {
+    return ints[MaxIntsIdx(ints)]
+}
+
+func MinIntsIdx( ints []int ) int {
+    min := math.MaxInt32
+    minIdx := 0
+    for i,num := range ints {
+        if num < min {
+            min = num
+            minIdx = i
+        }
+    }
+    
+    return minIdx
+}
+
+func MinInts( ints []int ) int {
+    return ints[MinIntsIdx(ints)]
 }
 
 func MinInt( a, b int ) int {
