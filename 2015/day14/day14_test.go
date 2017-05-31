@@ -4,7 +4,10 @@ import(
     "testing"
     "github.com/schwern/adventofcode.go/2015/day14"
     "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
+
+var Input_File = "testdata/input.txt"
 
 func TestRunRunReindeer( t *testing.T ) {
     tests := []struct{ Arg day14.Reindeer; Want int }{
@@ -40,4 +43,18 @@ func TestParseLine( t *testing.T ) {
         have := day14.ParseLine( test.Arg )
         testutil.AssertEq( t, *have, test.Want )
     }
+}
+
+func TestPart1( t *testing.T ) {
+    lines := util.LineChannel( Input_File )
+    
+    time := 2503
+    
+    dist := 0
+    for line := range lines {
+        r := day14.ParseLine( line )
+        dist = util.MaxInt( r.RunRunReindeer( time ), dist )
+    }
+    
+    testutil.AssertEq( t, dist, 2640 )
 }
