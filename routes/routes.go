@@ -1,7 +1,6 @@
 package routes
 
 import(
-    "sync"
     "github.com/schwern/adventofcode.go/permutation"
     "github.com/schwern/adventofcode.go/util"
 )
@@ -145,23 +144,16 @@ func (self *Routes) TryAllPaths() chan int {
 func (self *Routes) TryPaths( paths chan []int ) chan int {
     ch := make( chan int )
     
-    var wg sync.WaitGroup
-    for path := range paths {
-        wg.Add(1)
-        
-        go func( path []int ) {
-            defer wg.Done()
+    go func() {
+        defer close(ch)
+            
+        for path := range paths {
             cost, err := self.PathCost( path )
             if err != nil {
                 return
             }
             ch <- cost
-        }(path)
-    }
-    
-    go func() {
-        wg.Wait()
-        close(ch)
+        }
     }()
     
     return ch
