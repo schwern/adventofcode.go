@@ -1,0 +1,45 @@
+package day16
+
+import(
+    "regexp"
+    "strings"
+    "github.com/schwern/adventofcode.go/util"
+)
+
+type Compounds map[string]int
+type Sue struct {
+    num int
+    compounds Compounds
+}
+
+func NewSue( num int, compunds Compounds ) *Sue {
+    sue := Sue{ num: num, compounds: compunds }
+    return &sue
+}
+
+var sueRe = regexp.MustCompile(
+    `Sue (\d+): (.+)`,
+)
+func ParseSue( line string ) *Sue {
+    match := sueRe.FindStringSubmatch( line )
+    if match == nil {
+        util.Panicf("Cannot understand: %v", line)
+    }
+    
+    num := match[1]
+    
+    compounds := ParseCompunds( match[2] )
+    
+    sue := Sue{ num: util.MustAtoi(num), compounds: compounds }
+    return &sue
+}
+
+func ParseCompunds( line string ) Compounds {
+    compounds := make( Compounds )
+    for _,compound := range strings.Split( line, ", " ) {
+        pair := strings.SplitN( compound, ": ", 2 )
+        compounds[pair[0]] = util.MustAtoi(pair[1])
+    }
+    
+    return compounds
+}
