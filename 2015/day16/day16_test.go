@@ -4,7 +4,10 @@ import(
     "testing"
     "github.com/schwern/adventofcode.go/2015/day16"
     "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
 )
+
+var InputFile = "testdata/input.txt"
 
 func TestParseSue( t *testing.T ) {
     want := day16.NewSue(
@@ -41,4 +44,30 @@ func TestCheckCompounds( t *testing.T ) {
         day16.Compounds{ "cats": 0 },
     )
     testutil.AssertEq( t, notMatch.CheckCompounds(want), false )
+}
+
+func TestPart1( t *testing.T ) {
+    want := day16.Compounds{
+        "children": 3,
+        "cats": 7,
+        "samoyeds": 2,
+        "pomeranians": 3,
+        "akitas": 0,
+        "vizslas": 0,
+        "goldfish": 5,
+        "trees": 3,
+        "cars": 2,
+        "perfumes": 1,
+    }
+    
+    sueNum := 0
+    for line := range util.LineChannel( InputFile ) {
+        sue := day16.ParseSue( line )
+        if sue.CheckCompounds(want) {
+            sueNum = sue.Num
+            break
+        }
+    }
+    
+    testutil.AssertEq( t, sueNum, 40 )
 }

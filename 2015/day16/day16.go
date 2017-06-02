@@ -8,12 +8,12 @@ import(
 
 type Compounds map[string]int
 type Sue struct {
-    num int
+    Num int
     compounds Compounds
 }
 
 func NewSue( num int, compunds Compounds ) *Sue {
-    sue := Sue{ num: num, compounds: compunds }
+    sue := Sue{ Num: num, compounds: compunds }
     return &sue
 }
 
@@ -30,7 +30,7 @@ func ParseSue( line string ) *Sue {
     
     compounds := ParseCompunds( match[2] )
     
-    sue := Sue{ num: util.MustAtoi(num), compounds: compounds }
+    sue := Sue{ Num: util.MustAtoi(num), compounds: compounds }
     return &sue
 }
 
