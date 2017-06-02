@@ -61,3 +61,14 @@ func TestPart1( t *testing.T ) {
     
     testutil.AssertEq( t, c.BestScore(100), 13882464 )
 }
+
+func TestPart2( t *testing.T ) {    
+    c := day15.NewCookie()
+    
+    lines := util.LineChannel( InputFile )    
+    for line := range lines {
+        c.AddIngredient( day15.ParseIngredient(line) )
+    }
+    
+    testutil.AssertEq( t, c.BestScoreExactCalories(100, 500), 11171160 )
+}

@@ -65,9 +65,43 @@ func (self *Cookie) Score( amounts []int ) int {
     }
 }
 
+func (self *Cookie) Calories( combo []int ) int {
+    cals := 0
+    for i, ing := range self.ingredients {
+        cals += ing.Calories * combo[i]
+    }
+    
+    return cals
+}
+
+func (self *Cookie) calorieCombosChan( total int, calsWanted int ) (chan []int) {
+    out := make( chan []int )
+    
+    go func() {
+        defer close(out)
+        
+        combos := self.ingredientComboChan( total )
+        for combo := range combos {
+            cals := self.Calories( combo )
+            if cals == calsWanted {
+                out <- combo
+            }
+        }
+    }()
+    
+    return out
+}
+
 func (self *Cookie) BestScore( total int ) int {
+    return self.bestScore( self.ingredientComboChan(total) )
+}
+
+func (self *Cookie) BestScoreExactCalories( total int, cals int ) int {
+    return self.bestScore( self.calorieCombosChan( total, cals ) )
+}
+
+func (self *Cookie) bestScore( combos chan []int ) int {
     best := math.MinInt32
-    combos := self.ingredientComboChan( total )
     for combo := range combos {
         best = util.MaxInt( best, self.Score(combo) )
     }
