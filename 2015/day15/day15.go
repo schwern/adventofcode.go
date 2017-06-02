@@ -1,6 +1,7 @@
 package day15
 
 import(
+    "math"
     "regexp"
     "github.com/schwern/adventofcode.go/util"
 )
@@ -62,6 +63,16 @@ func (self *Cookie) Score( amounts []int ) int {
     } else {
         return cap * dur * fla * tex
     }
+}
+
+func (self *Cookie) BestScore( total int ) int {
+    best := math.MinInt32
+    combos := self.ingredientComboChan( total )
+    for combo := range combos {
+        best = util.MaxInt( best, self.Score(combo) )
+    }
+    
+    return best
 }
 
 func (self *Cookie) ingredientComboChan( total int ) chan []int {    

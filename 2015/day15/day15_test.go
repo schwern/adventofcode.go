@@ -48,16 +48,16 @@ func TestCookieScore( t *testing.T ) {
     c.AddIngredient( Cinnamon )
     
     testutil.AssertEq( t, c.Score([]int{44,56}), 62842880 )
-    //testutil.AssertEq( t, c.BestScore(), 62842880 )
+    testutil.AssertEq( t, c.BestScore(100), 62842880 )
 }
 
-func TestPart1( t *testing.T ) {
-    t.Skip("Ingredent permutations incomplete")
-    
+func TestPart1( t *testing.T ) {    
     c := day15.NewCookie()
     
     lines := util.LineChannel( InputFile )    
     for line := range lines {
         c.AddIngredient( day15.ParseIngredient(line) )
     }
+    
+    testutil.AssertEq( t, c.BestScore(100), 13882464 )
 }
