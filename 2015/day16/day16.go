@@ -43,3 +43,14 @@ func ParseCompunds( line string ) Compounds {
     
     return compounds
 }
+
+func (self *Sue) CheckCompounds( want Compounds ) bool {
+    compounds := self.compounds
+    for key,have := range compounds {
+        if have != want[key] {
+            return false
+        }
+    }
+    
+    return true
+}
