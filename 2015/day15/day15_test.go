@@ -43,32 +43,32 @@ func TestParseIngredient( t *testing.T ) {
 }
 
 func TestCookieScore( t *testing.T ) {
-    c := day15.NewCookie()
+    c := day15.NewCookie(100)
     c.AddIngredient( Butterscotch )
     c.AddIngredient( Cinnamon )
     
     testutil.AssertEq( t, c.Score([]int{44,56}), 62842880 )
-    testutil.AssertEq( t, c.BestScore(100), 62842880 )
+    testutil.AssertEq( t, c.BestScore(), 62842880 )
 }
 
 func TestPart1( t *testing.T ) {    
-    c := day15.NewCookie()
+    c := day15.NewCookie(100)
     
     lines := util.LineChannel( InputFile )    
     for line := range lines {
         c.AddIngredient( day15.ParseIngredient(line) )
     }
     
-    testutil.AssertEq( t, c.BestScore(100), 13882464 )
+    testutil.AssertEq( t, c.BestScore(), 13882464 )
 }
 
 func TestPart2( t *testing.T ) {    
-    c := day15.NewCookie()
+    c := day15.NewCookie(100)
     
     lines := util.LineChannel( InputFile )    
     for line := range lines {
         c.AddIngredient( day15.ParseIngredient(line) )
     }
     
-    testutil.AssertEq( t, c.BestScoreExactCalories(100, 500), 11171160 )
+    testutil.AssertEq( t, c.BestScoreExactCalories(500), 11171160 )
 }

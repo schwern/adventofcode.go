@@ -34,11 +34,13 @@ func ParseIngredient( line string ) Ingredient {
 
 type Cookie struct {
     ingredients []Ingredient
+    tablespoons int
 }
 
-func NewCookie() *Cookie {
+func NewCookie( tbs int ) *Cookie {
     self := new(Cookie)
     self.ingredients = make( []Ingredient, 0 )
+    self.tablespoons = tbs
     return self
 }
 
@@ -74,13 +76,13 @@ func (self *Cookie) Calories( combo []int ) int {
     return cals
 }
 
-func (self *Cookie) calorieCombosChan( total int, calsWanted int ) (chan []int) {
+func (self *Cookie) calorieCombosChan( calsWanted int ) (chan []int) {
     out := make( chan []int )
     
     go func() {
         defer close(out)
         
-        combos := self.ingredientComboChan( total )
+        combos := self.ingredientComboChan()
         for combo := range combos {
             cals := self.Calories( combo )
             if cals == calsWanted {
@@ -92,12 +94,12 @@ func (self *Cookie) calorieCombosChan( total int, calsWanted int ) (chan []int) 
     return out
 }
 
-func (self *Cookie) BestScore( total int ) int {
-    return self.bestScore( self.ingredientComboChan(total) )
+func (self *Cookie) BestScore() int {
+    return self.bestScore( self.ingredientComboChan() )
 }
 
-func (self *Cookie) BestScoreExactCalories( total int, cals int ) int {
-    return self.bestScore( self.calorieCombosChan( total, cals ) )
+func (self *Cookie) BestScoreExactCalories( cals int ) int {
+    return self.bestScore( self.calorieCombosChan( cals ) )
 }
 
 func (self *Cookie) bestScore( combos chan []int ) int {
@@ -109,38 +111,38 @@ func (self *Cookie) bestScore( combos chan []int ) int {
     return best
 }
 
-func (self *Cookie) ingredientComboChan( total int ) chan []int {    
+func (self *Cookie) ingredientComboChan() chan []int {    
     ch := make( chan []int )
     go func() {
         defer close(ch)
         
         combo := make( []int, len(self.ingredients) )
-        combo[0] = total
+        combo[0] = self.tablespoons
         
         for combo != nil {
             next := make( []int, len(combo) )
             copy( next, combo )
             ch <- next
-            combo = self.nextIngredientCombo( combo, total )
+            combo = self.nextIngredientCombo( combo )
         }
     }()
     
     return ch
 }
 
-func (self *Cookie) nextIngredientCombo( combo []int, total int ) []int {
+func (self *Cookie) nextIngredientCombo( combo []int ) []int {
     sum := 0
     lastIdx := len(combo) - 1
     
     // We're done.
-    if combo[lastIdx] == total {
+    if combo[lastIdx] == self.tablespoons {
         return nil
     }
     
     for i := lastIdx; i >= 0; i-- {
         sum += combo[i]
         
-        if sum == total {
+        if sum == self.tablespoons {
             // Send one up
             combo[i+1]++
             combo[i]--

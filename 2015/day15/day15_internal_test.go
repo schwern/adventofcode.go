@@ -20,12 +20,12 @@ func TestIngredientComboChan( t *testing.T ) {
         nil,
     }
     
-    c := NewCookie()
+    c := NewCookie(3)
     for i := 0; i < 3; i++ {
         c.AddIngredient( Ingredient{} )
     }
     
-    ch := c.ingredientComboChan( 3 )
+    ch := c.ingredientComboChan()
     i := 0
     for combo := range ch {
         testutil.AssertEq( t, combo, want[i] )
