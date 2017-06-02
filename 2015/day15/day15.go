@@ -63,3 +63,54 @@ func (self *Cookie) Score( amounts []int ) int {
         return cap * dur * fla * tex
     }
 }
+
+func (self *Cookie) ingredientComboChan( total int ) chan []int {    
+    ch := make( chan []int )
+    go func() {
+        defer close(ch)
+        
+        combo := make( []int, len(self.ingredients) )
+        combo[0] = total
+        
+        for combo != nil {
+            next := make( []int, len(combo) )
+            copy( next, combo )
+            ch <- next
+            combo = self.nextIngredientCombo( combo, total )
+        }
+    }()
+    
+    return ch
+}
+
+func (self *Cookie) nextIngredientCombo( combo []int, total int ) []int {
+    sum := 0
+    lastIdx := len(combo) - 1
+    
+    // We're done.
+    if combo[lastIdx] == total {
+        return nil
+    }
+    
+    for i := lastIdx; i >= 0; i-- {
+        sum += combo[i]
+        
+        if sum == total {
+            // Send one up
+            combo[i+1]++
+            combo[i]--
+            
+            // Send the remainder down
+            if combo[i] > 0 {            
+                downIdx := util.MaxInt( 0, i-1 )
+                remainder := combo[i]
+                combo[i] = 0
+                combo[downIdx] = remainder
+            }
+            
+            break
+        }
+    }
+    
+    return combo
+}
