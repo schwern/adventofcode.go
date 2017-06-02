@@ -71,3 +71,39 @@ func TestPart1( t *testing.T ) {
     
     testutil.AssertEq( t, sueNum, 40 )
 }
+
+func TestPart2( t *testing.T ) {
+    want := day16.Compounds{
+        "children": 3,
+        "cats": 7,
+        "samoyeds": 2,
+        "pomeranians": 3,
+        "akitas": 0,
+        "vizslas": 0,
+        "goldfish": 5,
+        "trees": 3,
+        "cars": 2,
+        "perfumes": 1,
+    }
+    
+    greaterThan := func(a int, b int) bool { return a > b }
+    lessThan := func(a int, b int) bool { return a < b }
+    
+    ranges := map[string]day16.CompoundCheck{
+        "cats": greaterThan,
+        "trees": greaterThan,
+        "pomeranians": lessThan,
+        "goldfish": lessThan,
+    }
+    
+    sueNum := 0
+    for line := range util.LineChannel( InputFile ) {
+        sue := day16.ParseSue( line )
+        if sue.CheckCompoundsRanged(want, ranges) {
+            sueNum = sue.Num
+            break
+        }
+    }
+    
+    testutil.AssertEq( t, sueNum, 241 )
+}

@@ -45,9 +45,18 @@ func ParseCompunds( line string ) Compounds {
 }
 
 func (self *Sue) CheckCompounds( want Compounds ) bool {
+    return self.CheckCompoundsRanged( want, nil )
+}
+
+type CompoundCheck func(int, int) bool
+func (self *Sue) CheckCompoundsRanged( want Compounds, ranges map[string]CompoundCheck ) bool {
     compounds := self.compounds
     for key,have := range compounds {
-        if have != want[key] {
+        if check,ok := ranges[key]; ok {
+            if !check( have, want[key] ) {
+                return false
+            }
+        } else if have != want[key] {
             return false
         }
     }
