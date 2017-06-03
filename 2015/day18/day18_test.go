@@ -41,3 +41,21 @@ func TestPart1( t *testing.T ) {
     
     testutil.AssertEq( t, gol.HowManyLightsDoYouSee(), 821 )
 }
+
+func TestPart2( t *testing.T ) {
+    grid := day18.ParseGridChan( util.LineChannel( InputFile ) )
+    gol := day18.NewGOL( 100, 100, grid )
+    
+    stuck := gol.MakeGrid()
+    stuck[0][0] = true
+    stuck[0][99] = true
+    stuck[99][0] = true
+    stuck[99][99] = true
+    gol.AddStuckLights( stuck )
+    
+    for i := 0; i < 100; i++ {
+        gol.Step()
+    }
+    
+    testutil.AssertEq( t, gol.HowManyLightsDoYouSee(), 886 )
+}

@@ -17,7 +17,7 @@ func (self *GOL) Grid() Grid {
     return self.grid
 }
 
-func (self *GOL) makeGrid() Grid {
+func (self *GOL) MakeGrid() Grid {
     // Top level slice
     grid := make(Grid, self.y)
         
@@ -74,7 +74,7 @@ func (self *GOL) nextLightState( lightX int, lightY int ) bool {
 }
 
 func (self *GOL) nextGrid() Grid {
-    nextGrid := self.makeGrid()
+    nextGrid := self.MakeGrid()
     
     for x := range self.grid {
         for y := range self.grid[x] {
