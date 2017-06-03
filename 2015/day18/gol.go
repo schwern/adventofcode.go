@@ -1,9 +1,14 @@
 package day18
 
+import(
+    "github.com/schwern/adventofcode.go/util"
+)
+
 type Grid [][]bool
 
 type GOL struct {
     grid Grid
+    stuck Grid
     x int
     y int
 }
@@ -27,6 +32,10 @@ func (self *GOL) makeGrid() Grid {
 }
 
 func (self *GOL) nextLightState( lightX int, lightY int ) bool {
+    if self.stuck != nil && self.stuck[lightX][lightY] {
+        return true
+    }
+
     neighbors := 0    
     for x := lightX - 1; x <= (lightX + 1); x++ {
         if x < 0 || self.x <= x {
@@ -94,8 +103,27 @@ func (self *GOL) HowManyLightsDoYouSee() int {
     return numLights
 }
 
+func (self *GOL) AddStuckLights( stuck Grid ) {
+    if len(stuck) != self.x || len(stuck[0]) != self.y {
+        util.Panicf(
+            "stuckGrid[%v][%v] is not the same size as grid[%v][%v]",
+            len(stuck), len(stuck[0]), self.x, self.y,
+        )
+    }
+    
+    self.stuck = stuck
+    
+    for x := range self.grid {
+        for y := range self.grid[x] {
+            if self.stuck[x][y] {
+                self.grid[x][y] = true
+            }
+        }
+    }
+}
+
 func NewGOL( x int, y int, state Grid ) *GOL {    
-    gol := GOL{ x: x, y: y, grid: state }
+    gol := GOL{ x: x, y: y, grid: state, stuck: nil }
 
     return &gol
 }
