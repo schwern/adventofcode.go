@@ -61,4 +61,7 @@ func TestStep( t *testing.T ) {
         testutil.AssertEq( t, gol.Grid(), state )
         gol.Step()
     }
+    
+    // The final state is stable, so it's ok we went an extra step.
+    testutil.AssertEq( t, gol.HowManyLightsDoYouSee(), 4 )
 }

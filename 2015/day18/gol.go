@@ -80,6 +80,20 @@ func (self *GOL) Step() {
     self.grid = self.nextGrid()
 }
 
+func (self *GOL) HowManyLightsDoYouSee() int {
+    numLights := 0
+    
+    for x := range self.grid {
+        for y := range self.grid[x] {
+            if self.grid[x][y] {
+                numLights++
+            }
+        }
+    }
+    
+    return numLights
+}
+
 func NewGOL( x int, y int, state Grid ) *GOL {    
     gol := GOL{ x: x, y: y, grid: state }
 
