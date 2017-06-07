@@ -1,7 +1,9 @@
 package day19
 
 import(
+    "bytes"
     "regexp"
+    "strings"
     "github.com/schwern/adventofcode.go/util"
 )
 
@@ -46,4 +48,30 @@ func (self *Machine) AddTransform( key, val string ) {
 
 func (self *Machine) GetTransforms( key string ) []string {
     return self.transforms[key]
+}
+
+func (self *Machine) CountDistinctResults( start string ) int {
+    results := make( map[string]bool )
+    
+    for idx := range start {
+        for from,list := range self.transforms {
+            str := start[idx:]
+            if strings.HasPrefix( str, from ) {
+                for _,to := range list {
+                    new := self.Transform( start, from, to, idx )
+                    results[new] = true
+                }
+            }
+        }
+    }
+    
+    return len(results)
+}
+
+func (self *Machine) Transform( start, from, to string, idx int ) string {
+    new := bytes.NewBufferString( start[:idx] )
+    new.WriteString(to)
+    new.WriteString(start[idx+1:])
+    
+    return new.String()
 }

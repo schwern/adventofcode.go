@@ -34,4 +34,10 @@ func TestAddTransformString( t *testing.T ) {
         
         testutil.AssertEq( t, have, want.val )
     }
+    
+    testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 0), "OHOH" )
+    testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 2), "HOOH" )
+    
+    testutil.AssertEq( t, machine.CountDistinctResults("HOH"), 4 )
+    testutil.AssertEq( t, machine.CountDistinctResults("HOHOHO"), 7 )
 }
