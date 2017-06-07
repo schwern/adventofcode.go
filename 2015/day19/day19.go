@@ -69,9 +69,11 @@ func (self *Machine) CountDistinctResults( start string ) int {
 }
 
 func (self *Machine) Transform( start, from, to string, idx int ) string {
-    new := bytes.NewBufferString( start[:idx] )
+    var new bytes.Buffer
+    new.Grow( len(start) + len(to) - len(from) )
+    new.WriteString(start[:idx])
     new.WriteString(to)
-    new.WriteString(start[idx+1:])
+    new.WriteString(start[idx+len(from):])
     
     return new.String()
 }
