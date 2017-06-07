@@ -4,6 +4,7 @@ import(
     "sort"
     "testing"
     "github.com/schwern/adventofcode.go/testutil"
+    "github.com/schwern/adventofcode.go/util"
     "github.com/schwern/adventofcode.go/2015/day19"
 )
 
@@ -47,4 +48,11 @@ func TestTransform( t *testing.T ) {
     testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 0), "OHOH" )    
     testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 2), "HOOH" )    
     testutil.AssertEq( t, machine.Transform("1Ca2", "Ca", "P", 1), "1P2" )
+}
+
+func TestPart1( t *testing.T ) {
+    machine := day19.NewMachine()
+    start := machine.ParseMachine( util.LineChannel( InputFile ) )
+
+    testutil.AssertEq( t, machine.CountDistinctResults(start), 518 )
 }

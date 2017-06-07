@@ -28,10 +28,15 @@ func ( self *Machine ) parseLine( line string ) (string, string) {
     return match[1], match[2]
 }
 
-func (self *Machine) ParseTransforms( lines chan string ) {
+func (self *Machine) ParseMachine( lines chan string ) string {
     for line := range lines {
+        if line == "" {
+            break
+        }
         self.AddTransformString( line )
     }
+    
+    return <-lines
 }
 
 func (self *Machine) AddTransformString( line string ) {
