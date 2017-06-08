@@ -3,7 +3,7 @@ package day19_test
 import(
     "sort"
     "testing"
-    "github.com/schwern/adventofcode.go/testutil"
+    "github.com/stvp/assert"
     "github.com/schwern/adventofcode.go/util"
     "github.com/schwern/adventofcode.go/2015/day19"
 )
@@ -35,24 +35,24 @@ func TestAddTransformString( t *testing.T ) {
         sort.Strings( have )
         sort.Strings( want.val )        
         
-        testutil.AssertEq( t, have, want.val )
+        assert.Equal( t, have, want.val )
     }
         
-    testutil.AssertEq( t, machine.CountDistinctResults("HOH"), 4 )
-    testutil.AssertEq( t, machine.CountDistinctResults("HOHOHO"), 7 )
+    assert.Equal( t, machine.CountDistinctResults("HOH"), 4 )
+    assert.Equal( t, machine.CountDistinctResults("HOHOHO"), 7 )
 }
 
 func TestTransform( t *testing.T ) {
     machine := day19.NewMachine()
     
-    testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 0), "OHOH" )    
-    testutil.AssertEq( t, machine.Transform("HOH", "H", "OH", 2), "HOOH" )    
-    testutil.AssertEq( t, machine.Transform("1Ca2", "Ca", "P", 1), "1P2" )
+    assert.Equal( t, machine.Transform("HOH", "H", "OH", 0), "OHOH" )    
+    assert.Equal( t, machine.Transform("HOH", "H", "OH", 2), "HOOH" )    
+    assert.Equal( t, machine.Transform("1Ca2", "Ca", "P", 1), "1P2" )
 }
 
 func TestPart1( t *testing.T ) {
     machine := day19.NewMachine()
     start := machine.ParseMachine( util.LineChannel( InputFile ) )
 
-    testutil.AssertEq( t, machine.CountDistinctResults(start), 518 )
+    assert.Equal( t, machine.CountDistinctResults(start), 518 )
 }
