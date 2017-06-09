@@ -50,6 +50,34 @@ func TestTransform( t *testing.T ) {
     assert.Equal( t, machine.Transform("1Ca2", "Ca", "P", 1), "1P2" )
 }
 
+func TestLeastTransforms( t *testing.T ) {
+    transforms := []string {
+        "e => H",
+        "e => O",
+        "H => HO",
+        "H => OH",
+        "O => HH",
+    }
+    
+    machine := day19.NewMachine()
+    for _,transform := range transforms {
+        machine.AddTransformString(transform)
+    }
+    
+    assert.Equal(
+        t,
+        machine.LeastTransforms( "e", "HOH" ),
+        []string{ "HOH", "HH", "O", "e" },
+    )
+        
+    // The path is unstable, but the length is always the same.
+    assert.Equal(
+        t,
+        len(machine.LeastTransforms( "e", "HOHOHO" )),
+        7,
+    )
+}
+
 func TestPart1( t *testing.T ) {
     machine := day19.NewMachine()
     start := machine.ParseMachine( util.LineChannel( InputFile ) )
