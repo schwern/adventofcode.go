@@ -2,14 +2,9 @@ package day19
 
 import(
     "bytes"
-    "math"
     "regexp"
     "strings"
     "github.com/schwern/adventofcode.go/util"
-    "github.com/schwern/adventofcode.go/mapWithDefault"
-    "github.com/ferhatelmas/levenshtein"
-    mapset "github.com/deckarep/golang-set"
-    priorityQueue "github.com/tracymacding/priority-queue"
 )
 
 type Machine struct {
@@ -99,90 +94,55 @@ func (self *Machine) Transform( start, from, to string, idx int ) string {
     return new.String()
 }
 
-// A* algorithm from the Wikipedia pseudocode description.
-func (self *Machine) LeastTransforms( start, goal string ) []string {
-    // Nodes already evaluated.
-    closedSet := mapset.NewSet()
-    
-    // Queue of nodes to be evaluated.
-    openSet := priorityQueue.NewPriorityQueue()
-    
-    // Add the start to the queue.
-    // Priority is the estimate of its cost to reach the goal.
-    openSet.Push(
-        priorityQueue.NewNode(start, nil, self.guessCost(start, goal)),
-    )
-    
-    // For each node, which can it be most efficiently reached from.
-    cameFrom := make( map[string]string )
-    
-    // Cost of going from the start to a node.
-    gScore := mapWithDefault.New( math.MaxInt32 )
-    gScore.Set(start, 0)
-    
-    for openSet.Length() != 0 {
-        currentNode := openSet.Pop()
-        current := currentNode.GetKey().(string)
-        if current == goal {
-            return self.reconstructPath(cameFrom, current)
-        }        
-        closedSet.Add(current)
-        
-        for neighbor := range self.Transforms(current) {            
-            if len(neighbor) > len(goal) {
-                // It's too big
-                continue
-            }
-            if len(neighbor) == len(goal) && neighbor != goal {
-                // Right size, but not the goal
-                continue
-            }
-            if closedSet.Contains(neighbor) {
-                // We already evaluated this.
-                continue
-            }
-            neighborNode := priorityQueue.NewNode(neighbor, nil, math.MaxInt32)
-            
-            tentativegScore := gScore.Get(current).(int) + 1
-            if tentativegScore >= gScore.Get(neighbor).(int) {
-                // It's not a better path
-                openSet.Push( neighborNode )
-                continue
-            }
-            
-            // Best path yet!
-            cameFrom[neighbor] = current
-            gScore.Set(neighbor, tentativegScore)
-            costGuess := gScore.Get(neighbor).(int) + self.guessCost(neighbor, goal)
-            neighborNode.UpdatePrio( costGuess )
-            openSet.Push( neighborNode )
-        }
+var numElementsRe = regexp.MustCompile(
+    `([A-Z][a-z]|[A-Z]|e)`,
+)
+func (self *Machine) NumElements( molecule string ) int {
+    if len(molecule) == 0 {
+        return 0
     }
     
-    // There is no path.
-    return nil
+    matches := numElementsRe.FindAllString(molecule, -1)
+    if matches == nil {
+        util.Panicf("Cannot match %v against %v", numElementsRe, molecule)
+    }
+    
+    return len(matches)
 }
 
-func (self *Machine) guessCost( here, goal string ) int {
-    switch {
-        case here == goal:
-            return 0
-        case len(here) >= len(goal):
-            return math.MaxInt32
-        default:
-            return levenshtein.Dist( here, goal )
+func (self *Machine) NumTransforms( start, goal string ) int {
+    // All transforms are of these forms...
+    // Note: y can be x, and two y's can be the same element,
+    // but x and y are never Rn, Ar, or Y.
+    // x => y y
+    // x => y Rn y Ar
+    // x => y Rn y Y y (Y y)* Ar
+    //
+    // Rn and Ar are always balanced.
+    // Transforms always add 1 + the number of Y's.
+    
+    // x => yy always adds 1, so the number necessary
+    // is the difference in length
+    changes := self.NumElements(goal) - self.NumElements(start)
+    
+    // Special case for 'e' which might be e => X.
+    // That adds an extra transform for each e.
+    if len(self.GetTransforms("e")[0]) == 1 {
+        eCount := strings.Count(start, "e")
+        changes += eCount
     }
-}
-
-func (self *Machine) reconstructPath( cameFrom map[string]string, current string ) []string {
-    totalPath := []string{current}
-    var ok bool
-    for {
-        current, ok = cameFrom[current]
-        if !ok {
-            break
-        }
-        totalPath = append(totalPath, current)
-    }
-    return totalPath
+    
+    // Rn/Ar pairs don't add an extra transform.
+    rnCount := strings.Count(goal, "Rn")
+    arCount := strings.Count(goal, "Ar")
+    if rnCount != arCount {
+        util.Panicf("rnCount: %v, arCount: %v. Should be equal!", rnCount, arCount)
+    }    
+    changes -= rnCount * 2
+    
+    // Each Y indicates the transform can do an extra one.
+    yCount := strings.Count(goal, "Y")
+    changes -= yCount * 2
+    
+    return changes
 }
