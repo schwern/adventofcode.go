@@ -7,7 +7,9 @@ import(
     "strings"
     "github.com/schwern/adventofcode.go/util"
     "github.com/schwern/adventofcode.go/mapWithDefault"
+    "github.com/ferhatelmas/levenshtein"
     mapset "github.com/deckarep/golang-set"
+    priorityQueue "github.com/tracymacding/priority-queue"
 )
 
 type Machine struct {
@@ -102,51 +104,58 @@ func (self *Machine) LeastTransforms( start, goal string ) []string {
     // Nodes already evaluated.
     closedSet := mapset.NewSet()
     
-    // Discovered nodes to be evaluated.
-    openSet := mapset.NewSetWith(start)
+    // Queue of nodes to be evaluated.
+    openSet := priorityQueue.NewPriorityQueue()
+    
+    // Add the start to the queue.
+    // Priority is the estimate of its cost to reach the goal.
+    openSet.Push(
+        priorityQueue.NewNode(start, nil, self.guessCost(start, goal)),
+    )
     
     // For each node, which can it be most efficiently reached from.
     cameFrom := make( map[string]string )
     
     // Cost of going from the start to a node.
-    // MaxInt by default.
     gScore := mapWithDefault.New( math.MaxInt32 )
     gScore.Set(start, 0)
     
-    // Best guess at going from the start to a node.
-    // MaxInt by default.
-    fScore := mapWithDefault.New( math.MaxInt32 )
-    fScore.Set(start, self.guessCost(start, goal))
-    
-    for openSet.Cardinality() != 0 {
-        current := self.leastCost(openSet, fScore)
+    for openSet.Length() != 0 {
+        currentNode := openSet.Pop()
+        current := currentNode.GetKey().(string)
         if current == goal {
             return self.reconstructPath(cameFrom, current)
-        }
-        
-        openSet.Remove(current)
+        }        
         closedSet.Add(current)
         
-        for neighbor := range self.Transforms(current) {
+        for neighbor := range self.Transforms(current) {            
+            if len(neighbor) > len(goal) {
+                // It's too big
+                continue
+            }
+            if len(neighbor) == len(goal) && neighbor != goal {
+                // Right size, but not the goal
+                continue
+            }
             if closedSet.Contains(neighbor) {
                 // We already evaluated this.
                 continue
             }
-            openSet.Add(neighbor)
+            neighborNode := priorityQueue.NewNode(neighbor, nil, math.MaxInt32)
             
             tentativegScore := gScore.Get(current).(int) + 1
             if tentativegScore >= gScore.Get(neighbor).(int) {
                 // It's not a better path
+                openSet.Push( neighborNode )
                 continue
             }
             
             // Best path yet!
             cameFrom[neighbor] = current
             gScore.Set(neighbor, tentativegScore)
-            fScore.Set(
-                neighbor,
-                gScore.Get(neighbor).(int) + self.guessCost(neighbor, goal),
-            )
+            costGuess := gScore.Get(neighbor).(int) + self.guessCost(neighbor, goal)
+            neighborNode.UpdatePrio( costGuess )
+            openSet.Push( neighborNode )
         }
     }
     
@@ -161,23 +170,8 @@ func (self *Machine) guessCost( here, goal string ) int {
         case len(here) >= len(goal):
             return math.MaxInt32
         default:
-            return len(goal) - len(here)
+            return levenshtein.Dist( here, goal )
     }
-}
-
-func (self *Machine) leastCost( set mapset.Set, costs *mapWithDefault.Map ) string {
-    minCost := math.MaxInt32
-    var minNode string
-    
-    for item := range set.Iterator().C {
-        cost := costs.Get(item.(string)).(int)
-        if cost < minCost {
-            minCost = cost
-            minNode = item.(string)
-        }
-    }
-    
-    return minNode
 }
 
 func (self *Machine) reconstructPath( cameFrom map[string]string, current string ) []string {

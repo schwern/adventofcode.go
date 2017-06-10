@@ -84,3 +84,11 @@ func TestPart1( t *testing.T ) {
 
     assert.Equal( t, machine.CountDistinctResults(start), 518 )
 }
+
+func TestPart2( t *testing.T ) {
+    machine := day19.NewMachine()
+    want := machine.ParseMachine( util.LineChannel( InputFile ) )
+
+    t.Skip("A* is not the solution")
+    t.Log( len(machine.LeastTransforms("e", want)) )
+}
