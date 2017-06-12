@@ -6,11 +6,12 @@ import(
     "github.com/schwern/adventofcode.go/primes"
 )
 
-func TestChannel( t *testing.T ) {
-    wants := []int{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
-    pChan := primes.Channel()
+func TestUpTo( t *testing.T ) {
+    want := []int{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
     
-    for _,want := range wants {
-        assert.Equal( t, <-pChan, want )
-    }
+    have := primes.UpTo( 30 )    
+    assert.Equal( t, have, want )
+    
+    have = primes.UpTo( 0 )
+    assert.Equal( t, have, want )
 }

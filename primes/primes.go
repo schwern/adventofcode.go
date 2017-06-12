@@ -1,40 +1,45 @@
-// From https://play.golang.org/p/9U22NfrXeq
-
 package primes
 
-// Send the sequence 2, 3, 5, 7, 9 ... to channel 'ch'.
-func generate(ch chan<- int) {
-    ch <- 2
-	for i := 3; ; i+=2 {
-		ch <- i
-	}
-}
+import(
+    "math"
+)
 
-// Copy the values from channel 'in' to channel 'out',
-// removing those divisible by 'prime'.
-func filter(in <-chan int, out chan<- int, prime int) {
-	for {
-		i := <-in
-		if i % prime != 0 {
-			out<- i
-		}
-	}
-}
+var primes = []int{2,3,5,7,11,13,17}
 
-func Channel() (chan int) {
-    out := make(chan int)
-    ch := make(chan int)
-    go generate(ch)
-
-    go func() {
-        for {
-            prime := <-ch
-            out <-prime
-            ch1 := make(chan int)
-            go filter(ch, ch1, prime)
-            ch = ch1
-        }
-    }()
+// Returns a slice of prime numbers at least up to `upto`.
+// The returned slice is shared, don't modify it.
+func UpTo( upto int ) []int {
+    if upto <= primes[len(primes)-1] {
+        return primes
+    }
     
-    return out
+    // Grow the array by what should be a sufficient amount.
+    // Using x/log(x) as the number of primes < x.
+    approxPrimes := float64(upto) / math.Log(float64(upto))
+    newCap := int(approxPrimes) + 1
+    if newCap > cap(primes) {
+        tmp := make([]int, len(primes), newCap)
+        copy(tmp, primes)
+        primes = tmp
+    }
+    
+    for c := primes[len(primes)-1] + 2; upto > c; c+= 2 {
+        isprime := true
+        for _,prime := range primes {
+            if prime*2 > c {
+                break
+            }
+            if c % prime == 0 {
+                // it's composite
+                isprime = false
+                break
+            }
+        }
+        
+        if isprime {
+            primes = append(primes, c)
+        }
+    }
+    
+    return primes
 }
