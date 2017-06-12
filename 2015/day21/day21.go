@@ -45,22 +45,11 @@ func (self *Player) EquipItem( item Item ) {
 }
 
 // Fight an opponent TO THE DEATH!
-// Returns how many HP the player has left. If it's <= 0, they lost.
+// Returns whether the opponent won or not.
 // Does not alter the player nor target.
-func (self Player) Fight( target Stats ) int {
-    selfDmg   := self.Attack(target)
-    targetDmg := target.Attack(self.Stats)
-    for self.HP > 0 && target.HP > 0 {
-        target.HP -= selfDmg
-        if target.HP <= 0 {
-            break
-        }
-        
-        self.HP -= targetDmg
-        if self.HP <= 0 {
-            break
-        }
-    }
+func (self Player) Fight( target Stats ) bool {
+    selfRatio := float64(self.HP) / float64(target.Attack(self.Stats))
+    targetRatio := float64(target.HP) / float64(self.Attack(target))
     
-    return self.HP
+    return selfRatio >= targetRatio
 }
