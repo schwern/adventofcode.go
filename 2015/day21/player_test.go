@@ -42,3 +42,20 @@ func TestEquipItem( t *testing.T ) {
     defer testutil.AssertPanicf( t, "Can't equip more items of this type, already have 1" )
     player.EquipItem( spoon )
 }
+
+func TestFight( t *testing.T ) {
+    player := day21.NewPlayer( 8, []int{1,1,1} )
+    player.Damage = 5
+    player.Armor = 5
+    
+    boss := day21.Stats{
+        HP: 12,
+        Damage: 7,
+        Armor: 2,
+    }
+
+    assert.Equal( t, player.Attack(boss), 3 )
+    assert.Equal( t, boss.Attack(player.Stats), 2 )
+    
+    assert.Equal( t, player.Fight(boss), 2 )
+}

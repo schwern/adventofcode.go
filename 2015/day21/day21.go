@@ -10,10 +10,9 @@ type Stats struct {
     Armor int
 }
 
-func (self *Stats) Attack( target *Stats ) int {
+func (self Stats) Attack( target Stats ) int {
     // Always do at least 1 HP of damage
-    target.HP -= util.MaxInt( self.Damage - target.Armor, 1 )
-    return target.HP
+    return util.MaxInt( self.Damage - target.Armor, 1 )
 }
 
 type Player struct {
@@ -43,4 +42,25 @@ func (self *Player) EquipItem( item Item ) {
     self.Equipment[item.Type] = append( items, item )
     self.Damage += item.Damage
     self.Armor  += item.Armor
+}
+
+// Fight an opponent TO THE DEATH!
+// Returns how many HP the player has left. If it's <= 0, they lost.
+// Does not alter the player nor target.
+func (self Player) Fight( target Stats ) int {
+    selfDmg   := self.Attack(target)
+    targetDmg := target.Attack(self.Stats)
+    for self.HP > 0 && target.HP > 0 {
+        target.HP -= selfDmg
+        if target.HP <= 0 {
+            break
+        }
+        
+        self.HP -= targetDmg
+        if self.HP <= 0 {
+            break
+        }
+    }
+    
+    return self.HP
 }
