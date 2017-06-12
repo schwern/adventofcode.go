@@ -1,6 +1,7 @@
 package day20_test
 
 import(
+    "math"
     "testing"
     "github.com/stvp/assert"
     "github.com/schwern/adventofcode.go/2015/day20"
@@ -11,7 +12,7 @@ func TestNumPresents( t *testing.T ) {
         0, 10, 30, 40, 70, 60, 120, 80, 150, 130,
     }
 
-    assert.Equal( t, day20.DeliverPresents(9), want )
+    assert.Equal( t, day20.DeliverPresents(9, math.MaxInt32, 10), want )
 }
 
 func TestPart1( t *testing.T ) {
@@ -19,10 +20,22 @@ func TestPart1( t *testing.T ) {
     
     // Worst case is a prime number gets (n+1)*10 presents.
     // So want/10 is the highest we need to go.
-    presents := day20.DeliverPresents(want/10)
+    presents := day20.DeliverPresents(want/10, math.MaxInt32, 10)
     for house, num := range presents {
         if num > want {
             assert.Equal( t, house, 665280 )
+            break
+        }
+    }
+}
+
+func TestPart2( t *testing.T ) {
+    want := 29000000
+    
+    presents := day20.DeliverPresents(want, 50, 11)
+    for house, num := range presents {
+        if num > want {
+            assert.Equal( t, house, 705600 )
             break
         }
     }

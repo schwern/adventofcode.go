@@ -5,7 +5,7 @@ import(
     "sync"
 )
 
-func DeliverPresents( maxHouse int ) []int {
+func DeliverPresents( maxHouse, maxDeliveries, numPresents int ) []int {
     presents := make( []int, maxHouse+1 )
 
     var wg sync.WaitGroup
@@ -13,8 +13,10 @@ func DeliverPresents( maxHouse int ) []int {
         defer wg.Done()
         
         for elf := start; elf <= maxHouse; elf+=by {
-            for houseNum := elf; houseNum <= maxHouse; houseNum += elf {
-                presents[houseNum] += elf * 10
+            numDelivered := 0
+            for houseNum := elf; houseNum <= maxHouse && numDelivered < maxDeliveries; houseNum += elf {
+                presents[houseNum] += elf * numPresents
+                numDelivered++
             }
         }
     }
