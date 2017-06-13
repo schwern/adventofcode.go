@@ -39,7 +39,7 @@ func TestEquipItem( t *testing.T ) {
     assert.Equal( t, player.Damage, spoon.Damage + babies.Damage )
     assert.Equal( t, player.Armor, spoon.Armor + babies.Armor )
     
-    defer testutil.AssertPanicf( t, "Can't equip more items of this type, already have 1" )
+    defer testutil.AssertPanicf( t, "Already have 1 of type %v equipped", spoon.Type )
     player.EquipItem( spoon )
 }
 

@@ -17,31 +17,45 @@ func (self Stats) Attack( target Stats ) int {
 
 type Player struct {
     Stats
-    Equipment [][]Item
+    Slots []int
+    MaxSlots []int
 }
 
-func NewPlayer( hp int, limits []int ) *Player {
+func NewPlayer( hp int, maxSlots []int ) *Player {
     self := Player{
         Stats: Stats{ HP: hp, Damage: 0, Armor: 0 },
-        Equipment: make( [][]Item, len(limits) ),
-    }
-    
-    for i,limit := range limits {
-        self.Equipment[i] = make( []Item, 0, limit )
+        MaxSlots: maxSlots,
+        Slots: make( []int, len(maxSlots) ),
     }
     
     return &self
 }
 
 func (self *Player) EquipItem( item Item ) {
-    items := self.Equipment[item.Type]
-    if cap(items) == len(items) {
-        util.Panicf("Can't equip more items of this type, already have %v", len(items))
+    if self.Slots[item.Type] >= self.MaxSlots[item.Type] {
+        util.Panicf(
+            "Already have %v of type %v equipped",
+            self.MaxSlots[item.Type],
+            item.Type,
+        )
     }
     
-    self.Equipment[item.Type] = append( items, item )
+    self.Slots[item.Type]++
+    
     self.Damage += item.Damage
     self.Armor  += item.Armor
+}
+
+func (self *Player) UnequipItem( item Item ) {
+    if self.Slots[item.Type] <= 0 {
+        util.Panicf(
+            "No items of type %v equipped.", item.Type,
+        )
+    }
+    
+    self.Slots[item.Type]--
+    self.Damage -= item.Damage
+    self.Armor  -= item.Armor
 }
 
 // Fight an opponent TO THE DEATH!
