@@ -3,6 +3,9 @@ package day21
 import(
     "testing"
     "github.com/stvp/assert"
+    "github.com/schwern/adventofcode.go/combination"
+    "github.com/schwern/adventofcode.go/util"
+    "math"
 )
 
 func populateShop() *Shop {
@@ -20,6 +23,7 @@ func populateShop() *Shop {
         `Splintmail   53     0       3`,
         `Bandedmail   75     0       4`,
         `Platemail   102     0       5`,
+        `NoArmor       0     0       0`,
     }
 
     var ringTexts = []string{
@@ -29,6 +33,8 @@ func populateShop() *Shop {
         `Defense+1   20     0       1`,
         `Defense+2   40     0       2`,
         `Defense+3   80     0       3`,
+        `NoRing1      0     0       0`,
+        `NoRing2      0     0       0`,
     }
 
     shop := NewShop()
@@ -56,4 +62,55 @@ func TestParseItem( t *testing.T ) {
     assert.Equal( t, item.Damage, 3 )
     assert.Equal( t, item.Armor, 1 )
     assert.Equal( t, item.Type, Ring )
+}
+
+func equipmentCombosChan( shop Shop ) chan []Item {
+    ch := make( chan []Item )
+    
+    go func() {
+        defer close(ch)
+        
+        weapons := shop.GetShelf( Weapon )
+        armor   := shop.GetShelf( Armor )
+        rings   := shop.GetShelf( Ring )
+        
+        for _,weapon := range weapons {
+            for _,armor := range armor {
+                for ringCombo := range combination.Chan( len(rings), 2 ) {                    
+                    items := []Item{
+                        weapon,
+                        armor,
+                        rings[ringCombo[0]],
+                        rings[ringCombo[1]],
+                    }
+
+                    ch <- items
+                }
+            }
+        }
+    }()
+    
+    return ch
+}
+
+var boss = Stats{ HP: 109, Damage: 8, Armor: 2 }
+
+func TestPart1( t *testing.T ) {
+    shop := populateShop()
+
+    bestCost := math.MaxInt32
+    for combo := range equipmentCombosChan( *shop ) {
+        player := NewPlayer(100, []int{1,1,2})
+        cost := 0
+        for _,item := range combo {
+            player.EquipItem( item )
+            cost += item.Cost
+        }
+                    
+        if player.Fight(boss) {
+            bestCost = util.MinInt( bestCost, cost )
+        }
+    }
+    
+    assert.Equal( t, bestCost, 111 )
 }
