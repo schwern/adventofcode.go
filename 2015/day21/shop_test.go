@@ -8,8 +8,8 @@ import(
 
 func TestShop( t *testing.T ) {
     shop := day21.NewShop()
-    emptyShelf := make( day21.ShopShelf )
-    assert.Equal( t, shop.ListItems( day21.Weapon ), emptyShelf )
+    emptyShelf := day21.ShopShelf{}
+    assert.Equal( t, shop.GetShelf( day21.Weapon ), emptyShelf )
     
     spoon := day21.Item{
         Name: "Spoon!",
@@ -37,19 +37,10 @@ func TestShop( t *testing.T ) {
     shop.AddItem(fork)
     shop.AddItem(oneRing)
     
-    wantWeapons := make( day21.ShopShelf )
-    wantWeapons[spoon.Name] = spoon
-    wantWeapons[fork.Name] = fork
-    
-    wantRings := make( day21.ShopShelf )
-    wantRings[oneRing.Name] = oneRing
+    wantWeapons := day21.ShopShelf{ spoon, fork }
+    wantRings := day21.ShopShelf{ oneRing }
         
-    assert.Equal( t, shop.ListItems( day21.Weapon ), wantWeapons )
-    assert.Equal( t, shop.ListItems( day21.Ring ), wantRings )
-    assert.Equal( t, shop.ListItems( day21.Armor ), emptyShelf )
-    
-    boughtSpoon := shop.BuyItem(spoon.Type, spoon.Name)
-    delete( wantWeapons, spoon.Name )    
-    assert.Equal( t, boughtSpoon, spoon )
-    assert.Equal( t, shop.ListItems( day21.Weapon ), wantWeapons )
+    assert.Equal( t, shop.GetShelf( day21.Weapon ), wantWeapons )
+    assert.Equal( t, shop.GetShelf( day21.Ring ), wantRings )
+    assert.Equal( t, shop.GetShelf( day21.Armor ), emptyShelf )    
 }

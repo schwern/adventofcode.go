@@ -60,7 +60,5 @@ func TestFight( t *testing.T ) {
     assert.Equal( t, player.Fight(boss), true )
     boss.HP = 13
     
-    _ = "breakpoint"
-    
     assert.Equal( t, player.Fight(boss), false )
 }
