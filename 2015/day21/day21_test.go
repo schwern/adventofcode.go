@@ -114,3 +114,23 @@ func TestPart1( t *testing.T ) {
     
     assert.Equal( t, bestCost, 111 )
 }
+
+func TestPart2( t *testing.T ) {
+    shop := populateShop()
+
+    worstCost := -1
+    for combo := range equipmentCombosChan( *shop ) {
+        player := NewPlayer(100, []int{1,1,2})
+        cost := 0
+        for _,item := range combo {
+            player.EquipItem( item )
+            cost += item.Cost
+        }
+                    
+        if !player.Fight(boss) {
+            worstCost = util.MaxInt( worstCost, cost )
+        }
+    }
+    
+    assert.Equal( t, worstCost, 188 )
+}
