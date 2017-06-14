@@ -7,7 +7,7 @@ import(
 
 func TestExample1( t *testing.T ) {
     spellBook := GetSpellBook()
-    player := NewPlayer( 10, 250, 0 )
+    player := NewPlayer( 10, 250, 0, spellBook )
     boss := &Boss{ HP: 13, Damage: 8 }
     
     // The spell to cast, and what the player and boss
@@ -26,7 +26,7 @@ func TestExample1( t *testing.T ) {
 
 func TestExample2( t *testing.T ) {
     spellBook := GetSpellBook()
-    player := NewPlayer( 10, 250, 0 )
+    player := NewPlayer( 10, 250, 0, spellBook )
     boss := &Boss{ HP: 14, Damage: 8 }
     
     // The spell to cast, and what the player and boss

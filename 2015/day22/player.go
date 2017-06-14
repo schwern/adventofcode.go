@@ -9,18 +9,37 @@ type Player struct {
     Mana int
     Armor int
     Effects map[string]SpellEffect
+    SpellBook SpellBook
 }
 
-func NewPlayer( hp, mana, armor int ) *Player {
+func NewPlayer( hp, mana, armor int, spellBook SpellBook ) *Player {
     effects := make( map[string]SpellEffect )
     self := Player{
         HP: hp,
         Mana: mana,
         Armor: armor,
         Effects: effects,
+        SpellBook: spellBook,
     }
     
     return &self
+}
+
+func (self *Player) PossibleSpells() SpellBook {
+    possible := make( SpellBook )
+    
+    for name,spell := range self.SpellBook {
+        if spell.Cost > self.Mana {
+            continue
+        }
+        if _,ok := self.Effects[name]; ok {
+            continue
+        }
+        
+        possible[name] = spell
+    }
+    
+    return possible
 }
 
 func (self *Player) Cast( spell Spell, boss *Boss ) error {
