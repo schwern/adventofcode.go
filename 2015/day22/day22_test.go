@@ -6,14 +6,15 @@ import(
 )
 
 func TestExample1( t *testing.T ) {
+    spellBook := GetSpellBook()
     player := NewPlayer( 10, 250, 0 )
     boss := &Boss{ HP: 13, Damage: 8 }
     
     // The spell to cast, and what the player and boss
     // HP will be at the end of the boss' turn.
     tests := []struct{ spell Spell; playerHP, bossHP int }{
-        { spell: SpellBook["Poison"], playerHP: 2, bossHP: 10 },
-        { spell: SpellBook["Magic Missile"], playerHP: 2, bossHP: 0 },
+        { spell: spellBook["Poison"], playerHP: 2, bossHP: 10 },
+        { spell: spellBook["Magic Missile"], playerHP: 2, bossHP: 0 },
     }
     
     for _,test := range tests {
@@ -24,17 +25,18 @@ func TestExample1( t *testing.T ) {
 }
 
 func TestExample2( t *testing.T ) {
+    spellBook := GetSpellBook()
     player := NewPlayer( 10, 250, 0 )
     boss := &Boss{ HP: 14, Damage: 8 }
     
     // The spell to cast, and what the player and boss
     // HP will be at the end of the boss' turn.
     tests := []struct{ spell Spell; playerHP, bossHP int }{
-        { spell: SpellBook["Recharge"], playerHP: 2, bossHP: 14 },
-        { spell: SpellBook["Shield"], playerHP: 1, bossHP: 14 },
-        { spell: SpellBook["Drain"], playerHP: 2, bossHP: 12 },
-        { spell: SpellBook["Poison"], playerHP: 1, bossHP: 9 },
-        { spell: SpellBook["Magic Missile"], playerHP: 1, bossHP: -1 },
+        { spell: spellBook["Recharge"], playerHP: 2, bossHP: 14 },
+        { spell: spellBook["Shield"], playerHP: 1, bossHP: 14 },
+        { spell: spellBook["Drain"], playerHP: 2, bossHP: 12 },
+        { spell: spellBook["Poison"], playerHP: 1, bossHP: 9 },
+        { spell: spellBook["Magic Missile"], playerHP: 1, bossHP: -1 },
     }
     
     for _,test := range tests {

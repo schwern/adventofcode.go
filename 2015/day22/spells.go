@@ -43,10 +43,15 @@ var Spells = []Spell{
     },
 }
 
-var SpellBook = makeSpellBook( Spells )
+var spellBook = makeSpellBook( Spells )
+type SpellBook map[string]Spell
 
-func makeSpellBook( spells []Spell ) map[string]Spell {
-    book := make( map[string]Spell )
+func GetSpellBook() SpellBook {
+    return spellBook
+}
+
+func makeSpellBook( spells []Spell ) SpellBook {
+    book := make( SpellBook )
     
     for _,spell := range spells {
         book[spell.Name] = spell
