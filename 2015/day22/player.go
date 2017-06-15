@@ -8,21 +8,25 @@ type Player struct {
     HP int
     Mana int
     Armor int
-    Effects map[string]SpellEffect
+    Effects map[string]*SpellEffect
     SpellBook SpellBook
 }
 
 func NewPlayer( hp, mana, armor int, spellBook SpellBook ) *Player {
-    effects := make( map[string]SpellEffect )
     self := Player{
         HP: hp,
         Mana: mana,
         Armor: armor,
-        Effects: effects,
         SpellBook: spellBook,
     }
     
+    self.Reset()
+    
     return &self
+}
+
+func (self *Player) Reset() {
+    self.Effects = make( map[string]*SpellEffect )
 }
 
 func (self *Player) PossibleSpells() SpellBook {
@@ -46,6 +50,7 @@ func (self *Player) Cast( spell Spell, boss *Boss ) error {
     if self.Mana < spell.Cost {
         return errors.New("Spell costs too much mana.")
     }
+    self.Mana -= spell.Cost
     
     instant := spell.Instant
     if instant != nil {
@@ -61,7 +66,9 @@ func (self *Player) Cast( spell Spell, boss *Boss ) error {
         
         // Use a duplicate so decrementing the turns counter
         // won't change the main spell.
-        self.Effects[spell.Name] = *overTime
+        dup := &SpellEffect{}
+        *dup = *overTime
+        self.Effects[spell.Name] = dup
     }
     
     return nil
