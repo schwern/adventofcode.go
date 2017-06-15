@@ -91,10 +91,34 @@ func TestExample2( t *testing.T ) {
     }
 }
 
+func TestHardMode( t *testing.T ) {
+    spellBook := GetSpellBook()
+    player := NewPlayer( 3, 250, 0, spellBook )
+    player.HardMode = true
+    boss := &Boss{ HP: 14, Damage: 0 }
+
+    err := DoRound( player, boss, spellBook["Magic Missile"] )
+    assert.Nil( t, err )
+    assert.Equal( t, player.HP, 1 )
+    
+    err = DoRound( player, boss, spellBook["Magic Missile"] )
+    assert.Equal( t, err.Error(), `Player died` )
+    assert.Equal( t, player.HP, 0 )
+}
+
 func TestPart1( t *testing.T ) {
     spellBook := GetSpellBook()
     player := NewPlayer( 50, 500, 0, spellBook )
     boss := &Boss{ HP: 55, Damage: 8 }
     
     assert.Equal( t, LeastMana( *player, *boss, 10 ), 953 )
+}
+
+func TestPart2( t *testing.T ) {
+    spellBook := GetSpellBook()
+    player := NewPlayer( 50, 500, 0, spellBook )
+    player.HardMode = true
+    boss := &Boss{ HP: 55, Damage: 8 }
+    
+    assert.Equal( t, LeastMana( *player, *boss, 10 ), 1289 )
 }

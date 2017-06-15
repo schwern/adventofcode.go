@@ -1,6 +1,7 @@
 package day22
 
 import(
+    _ "fmt"
     "errors"
     "math"
 )
@@ -13,16 +14,28 @@ func startNextTurn( player *Player, boss *Boss ) {
         effect.Turns--
         if effect.Turns <= 0 {
             delete(player.Effects, name)
+            player.RemoveSpellEffect(*effect)
         }
     }
 }
 
 func DoRound( player *Player, boss *Boss, spell Spell ) error {
+    if player.HardMode {
+        player.HP--
+    }
+    if player.HP <= 0 {
+        return errors.New(`Player died`)
+    }
+    
     startNextTurn( player, boss )
     err := player.Cast(spell, boss)
     if err != nil {
         return err
     }
+    if boss.HP <= 0 {
+        return nil
+    }
+    
     startNextTurn( player, boss )
     if boss.HP > 0 {
         boss.Attack(player)
@@ -62,6 +75,7 @@ func LeastMana( player Player, boss Boss, maxTurns int ) int {
     path := make( []int, maxTurns )
     for {
         cost,prunedAt,err := tryPath( player, boss, path, least )
+        // fmt.Printf("%v: %v,%v,%v\n", path, cost, prunedAt,err)
         if err == nil {
             if cost < least {
                 least = cost

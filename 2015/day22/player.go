@@ -8,6 +8,7 @@ type Player struct {
     HP int
     Mana int
     Armor int
+    HardMode bool
     Effects map[string]*SpellEffect
     SpellBook SpellBook
 }
@@ -75,7 +76,7 @@ func (self *Player) Cast( spell Spell, boss *Boss ) error {
 }
 
 func (self *Player) ApplySpellEffect( effect SpellEffect ) {
-    self.Armor += effect.Armor
+    self.Armor = effect.Armor
     self.HP += effect.Heal
     self.Mana += effect.Mana
 }
