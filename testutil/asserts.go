@@ -1,7 +1,6 @@
 package testutil
 
 import(
-    "fmt"
     "reflect"
     "testing"
 )
@@ -53,17 +52,5 @@ func AssertStringSliceEq( t *testing.T, have, want []string ) {
             )
             return
         }
-    }
-}
-
-func AssertPanicf( t *testing.T, want_fmt string, want_args ...interface{} ) {
-    want := fmt.Sprintf( want_fmt, want_args...)
-
-    err := recover()
-    
-    if err == nil {
-        t.Errorf("Expected panic: %v", want)
-    } else {
-        AssertEq( t, err, want )
     }
 }

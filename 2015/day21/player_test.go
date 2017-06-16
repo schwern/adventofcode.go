@@ -1,9 +1,9 @@
 package day21_test
 
 import(
+    "fmt"
     "testing"
     "github.com/stvp/assert"
-    "github.com/schwern/adventofcode.go/testutil"
     "github.com/schwern/adventofcode.go/2015/day21"
 )
 
@@ -39,7 +39,10 @@ func TestEquipItem( t *testing.T ) {
     assert.Equal( t, player.Damage, spoon.Damage + babies.Damage )
     assert.Equal( t, player.Armor, spoon.Armor + babies.Armor )
     
-    defer testutil.AssertPanicf( t, "Already have 1 of type %v equipped", spoon.Type )
+    defer assert.Panic(
+        t,
+        fmt.Sprintf("Already have 1 of type %v equipped", spoon.Type),
+    )
     player.EquipItem( spoon )
 }
 

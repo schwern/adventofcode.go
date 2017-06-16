@@ -4,7 +4,6 @@ import(
     "testing"
     "github.com/stvp/assert"
     "github.com/schwern/adventofcode.go/2015/day23"
-    "github.com/schwern/adventofcode.go/testutil"
 )
 
 func TestParseInstruction( t *testing.T ) {
@@ -60,6 +59,6 @@ func TestParseInstruction( t *testing.T ) {
 }
 
 func TestParseInstructionBad( t *testing.T ) {
-    defer testutil.AssertPanicf(t, "Unknown instruction: foo")
+    defer assert.Panic(t, "Unknown instruction: foo")
     day23.ParseInstruction("foo b")
 }

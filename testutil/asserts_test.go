@@ -25,8 +25,3 @@ func TestAssertIntSliceEq( t *testing.T ) {
         []int{2, 5},
     )
 }
-
-func TestAssertPanicf( t *testing.T ) {
-    defer testutil.AssertPanicf( t, "This: %v", 42 )
-    panic("This: 42")
-}

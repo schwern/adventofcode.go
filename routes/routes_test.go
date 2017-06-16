@@ -3,8 +3,8 @@ package routes_test
 import(
     "sort"
     "testing"
+    "github.com/stvp/assert"
     "github.com/schwern/adventofcode.go/routes"
-    "github.com/schwern/adventofcode.go/testutil"
 )
 
 func TestAddGetRoute( t *testing.T ) {
@@ -14,18 +14,18 @@ func TestAddGetRoute( t *testing.T ) {
     routes.AddRoute( "London", "Belfast", 518 )
     routes.AddRoute( "Dublin", "Belfast", 141 )
 
-    testutil.AssertEq( t, routes.MustGetRoute( "London", "Dublin" ), 464 )
-    testutil.AssertEq( t, routes.MustGetRoute( "Dublin", "London" ), 464 )
-    testutil.AssertEq( t, routes.MustGetRoute( "Belfast", "London" ), 518 )
-    testutil.AssertEq( t, routes.MustGetRoute( "London", "Belfast" ), 518 )
-    testutil.AssertEq( t, routes.MustGetRoute( "Dublin", "Belfast" ), 141 )
-    testutil.AssertEq( t, routes.MustGetRoute( "Belfast", "Dublin" ), 141 )
+    assert.Equal( t, routes.MustGetRoute( "London", "Dublin" ), 464 )
+    assert.Equal( t, routes.MustGetRoute( "Dublin", "London" ), 464 )
+    assert.Equal( t, routes.MustGetRoute( "Belfast", "London" ), 518 )
+    assert.Equal( t, routes.MustGetRoute( "London", "Belfast" ), 518 )
+    assert.Equal( t, routes.MustGetRoute( "Dublin", "Belfast" ), 141 )
+    assert.Equal( t, routes.MustGetRoute( "Belfast", "Dublin" ), 141 )
 }
 
 func TestGetRouteUnknownRoute( t *testing.T ) {
     routes := routes.NewRoutes( false )
 
-    defer testutil.AssertPanicf( t, "Do not have a node named Foo" )
+    defer assert.Panic( t, "Do not have a node named Foo" )
     routes.GetRoute( "Foo", "Bar" )
 }
 
@@ -44,5 +44,5 @@ func TestTryAllPaths( t *testing.T ) {
     sort.Ints(have)
     want := []int{ 605, 605, 659, 659, 982, 982 }
     
-    testutil.AssertIntSliceEq( t, have, want )
+    assert.Equal( t, have, want )
 }
