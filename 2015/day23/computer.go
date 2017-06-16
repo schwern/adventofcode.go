@@ -38,11 +38,15 @@ func (self *Computer) RunInstruction( inst Instruction ) error {
             reg := inst.Args[0].(string)
             if self.Registers[reg] % 2 == 0 {
                 self.Pos += inst.Args[1].(int)
+            } else {
+                self.Pos++
             }
         case "jio":
             reg := inst.Args[0].(string)
             if self.Registers[reg] == 1 {
                 self.Pos += inst.Args[1].(int)
+            } else {
+                self.Pos++
             }
         default:
             return errors.New("Bad instruction")
