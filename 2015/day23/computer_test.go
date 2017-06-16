@@ -89,3 +89,16 @@ func TestPart1( t *testing.T ) {
     comp.RunInstructions(insts)
     assert.Equal( t, comp.Registers["b"], uint(184) )
 }
+
+func TestPart2( t *testing.T ) {
+    comp := day23.NewComputer()
+    
+    insts := []day23.Instruction{}
+    for line := range util.LineChannel( InputFile ) {
+        insts = append( insts, day23.ParseInstruction(line) )
+    }
+    
+    comp.Registers["a"] = 1
+    comp.RunInstructions(insts)
+    assert.Equal( t, comp.Registers["b"], uint(231) )
+}
