@@ -15,7 +15,7 @@ func TestFindSmallestCombos( t *testing.T ) {
     nums := []int{1,2,3,4,5,7,8,9,10,11}
 
     assert.Equal(
-        t, day24.FindSmallestCombos( nums ), [][]int{ {9,11} },
+        t, day24.FindSmallestCombos( nums, 3 ), [][]int{ {9,11} },
     )
 }
 
@@ -26,7 +26,23 @@ func TestSmallestQE( t *testing.T ) {
 }
 
 func TestPart1( t *testing.T ) {
-    combos := day24.FindSmallestCombos(Packages)
+    combos := day24.FindSmallestCombos(Packages, 3)
     
     assert.Equal( t, day24.SmallestQE( combos ), 10723906903 )
+}
+
+func TestExample2( t *testing.T ) {
+    nums := []int{1,2,3,4,5,7,8,9,10,11}
+    
+    assert.Equal(
+        t,
+        day24.FindSmallestCombos( nums, 4 ),
+        [][]int{ {4,11}, {5,10}, {7,8} },
+    )
+}
+
+func TestPart2( t *testing.T ) {
+    combos := day24.FindSmallestCombos(Packages, 4)
+    
+    assert.Equal( t, day24.SmallestQE( combos ), 74850409 )
 }

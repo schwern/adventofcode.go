@@ -50,13 +50,13 @@ func tryCombos( nums []int, k int, want int ) [][]int {
     return validCombos
 }
 
-func FindSmallestCombos( nums []int ) [][]int {
+func FindSmallestCombos( nums []int, N int ) [][]int {
     total := sumInts(nums)
-    if total % 3 != 0 {
+    if total % N != 0 {
         panic("Can't divide evenly!")
     }
     
-    want := total/3
+    want := total/N
     
     for k := 1; k < len(nums); k++ {
         combos := tryCombos( nums, k, want )
