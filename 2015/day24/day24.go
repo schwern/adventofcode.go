@@ -69,7 +69,7 @@ func FindSmallestCombos( nums []int ) [][]int {
 }
 
 func SmallestQE( combos [][]int ) int {
-    qe := math.MaxInt32
+    qe := math.MaxInt64
     for _,combo := range combos {
         qe = util.MinInt( qe, productInts(combo) )
     }
