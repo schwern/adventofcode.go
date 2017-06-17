@@ -12,35 +12,17 @@ func TestTryCombos( t *testing.T ) {
     assert.Equal( t, combos, [][]int{} )
     
     combos = tryCombos( nums, 2, 20 )
-    assert.Equal( t, combos, [][]int{ {7,9} } )
+    assert.Equal( t, combos, [][]int{ {9,11} } )
     
     combos = tryCombos( nums, 3, 20 )
     assert.Equal(
         t, combos,
         [][]int{
-            {0,6,9}, {0,7,8},
-            {1,5,9}, {1,6,8},
-            {2,5,8}, {2,6,7},
-            {3,4,9}, {3,5,7},
-            {4,5,6},
+            {1,8,11}, {1,9,10},
+            {2,7,11}, {2,8,10},
+            {3,7,10}, {3,8,9},
+            {4,5,11}, {4,7,9},
+            {5,7,8},
         },
     )
-}
-
-func TestSmallestBucketsChan( t *testing.T ) {
-    nums := []int{1,2,3,4,5,7,8,9,10,11}
-
-    wants := [][]int{
-        {7,9},
-        {0,6,9}, {0,7,8},
-        {1,5,9}, {1,6,8},
-        {2,5,8}, {2,6,7},
-        {3,4,9}, {3,5,7},
-        {4,5,6},
-    }
-    
-    bucketChan := smallestBucketsChan( nums )
-    for _,want := range wants {
-        assert.Equal( t, <-bucketChan, want )
-    }
 }

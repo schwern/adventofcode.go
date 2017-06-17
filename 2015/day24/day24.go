@@ -1,7 +1,9 @@
 package day24
 
 import(
+    "math"
     "github.com/schwern/adventofcode.go/combination"
+    "github.com/schwern/adventofcode.go/util"
 )
 
 func sumInts( nums []int ) (total int) {
@@ -12,27 +14,21 @@ func sumInts( nums []int ) (total int) {
     return
 }
 
-func smallestBucketsChan( nums []int ) chan []int {
-    total := sumInts(nums)
-    if total % 3 != 0 {
-        panic("Can't divide evenly!")
+func productInts( nums []int ) int {
+    total := 1
+    for _,num := range nums {
+        total *= num
     }
     
-    want := total/3
-    
-    ch := make( chan []int )
-    go func() {
-        defer close(ch)
-        
-        for k := 1; k < len(nums); k++ {
-            combos := tryCombos( nums, k, want )
-            for _,combo := range combos {
-                ch <- combo
-            }
-        }
-    }()
-    
-    return ch
+    return total
+}
+
+func pickCombo( nums []int, combo []int ) []int {
+    picks := make( []int, len(combo) )
+    for pIdx,nIdx := range combo {
+        picks[pIdx] = nums[nIdx]
+    }
+    return picks
 }
 
 func tryCombos( nums []int, k int, want int ) [][]int {
@@ -44,9 +40,38 @@ func tryCombos( nums []int, k int, want int ) [][]int {
             total += nums[i]
         }
         if total == want {
-            validCombos = append(validCombos, combo)
+            validCombos = append(
+                validCombos,
+                pickCombo(nums,combo),
+            )
         }
     }
     
     return validCombos
+}
+
+func FindSmallestCombos( nums []int ) [][]int {
+    total := sumInts(nums)
+    if total % 3 != 0 {
+        panic("Can't divide evenly!")
+    }
+    
+    want := total/3
+    
+    for k := 1; k < len(nums); k++ {
+        combos := tryCombos( nums, k, want )
+        if len(combos) != 0 {
+            return combos
+        }
+    }
+    
+    return nil
+}
+
+func SmallestQE( combos [][]int ) int {
+    qe := math.MaxInt32
+    for _,combo := range combos {
+        qe = util.MinInt( qe, productInts(combo) )
+    }
+    return qe
 }
